@@ -50,7 +50,6 @@ class Match(models.Model):
     date = models.DateField(auto_now=True)
     host_goals = models.IntegerField(default=0)
     guest_goals = models.IntegerField(default=0)
-    events = models.ManyToManyField('Event', related_name='events')
 
     def __str__(self):
         return f"{self.host_goals} {self.guest_goals}"
@@ -58,7 +57,7 @@ class Match(models.Model):
 
 class Queue(models.Model):
     id = models.AutoField(primary_key=True)
-    match = models.ForeignKey('Match',on_delete=models.CASCADE, null=True)
+    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True)
     status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -70,14 +69,12 @@ class Queue(models.Model):
 class Statistic(models.Model):
     id = models.AutoField(primary_key=True)
     footballer = models.ForeignKey('Footballer', on_delete=models.CASCADE)
-    season = models.CharField(max_length=30, null=True)
     matches_played = models.IntegerField(default=0)
     goals_scored = models.IntegerField(default=0)
     assists = models.IntegerField(default=0)
     yellow_cards = models.IntegerField(default=0)
     red_cards = models.IntegerField(default=0)
-    minutes_played = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.footballer.name} - {str(self.season)}"
+        return f"{self.footballer.name}"
 
