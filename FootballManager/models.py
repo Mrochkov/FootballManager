@@ -1,20 +1,11 @@
+from datetime import datetime, timezone
+
 from django.db import models
 
 
-class Footballer(models.Model):
-    id = models.IntegerField(primary_key=True, blank=False)
-    name = models.CharField(max_length=100)
-    surname = models.TextField(max_length=100)
-    team_id = models.IntegerField(unique=True)
-
-    def __str__(self):
-        return f"{self.name} {self.surname}"
-
-
 class Team(models.Model):
-    id = models.IntegerField(primary_key=True, blank=False)
-    name = models.CharField(max_length=100)
-    footballers_ids = models.ExpressionList(models.IntegerField())
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, unique=True)
     wins = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
@@ -25,24 +16,41 @@ class Team(models.Model):
         return f"{self.name}"
 
 
-class Event(models.Model):
-    id = models.IntegerField(primary_key=True, blank=False)
-    minute = models.IntegerField(blank=False, default=0)
-    match_type = models.CharField(max_length=100)
-    footballer_id = models.IntegerField(unique=True)
-    match_id = models.IntegerField(blank=False, default=1)
+class Footballer(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    surname = models.CharField(max_length=100)
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='team', null=True)
 
     def __str__(self):
-        return f"{self.match_type} {self.minute}"
+        return f"{self.name} {self.surname}"
+
+
+class Event(models.Model):
+    id = models.AutoField(primary_key=True)
+    minute = models.IntegerField(blank=False, default=0)
+    footballer = models.ForeignKey('Footballer', on_delete=models.CASCADE, null=True)
+    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True)
+
+    class EventType(models.TextChoices):
+        GOAL = 'GOAL', 'Goal'
+        YELLOW_CARD = 'YELLOW CARD', 'Yellow Card'
+        RED_CARD = 'RED CARD', 'Red Card'
+
+    event_type = models.CharField(max_length=20, choices=EventType.choices, default=EventType.GOAL)
+
+    def __str__(self):
+        return f"{self.event_type} {self.minute}"
 
 
 class Match(models.Model):
-    id = models.IntegerField(primary_key=True, blank=False)
-    host_team_id = models.IntegerField(unique=True)
-    guest_team_id = models.IntegerField(unique=True)
+    id = models.AutoField(primary_key=True)
+    host_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='host_team', null=True)
+    guest_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='guest_team', null=True)
+    date = models.DateField(auto_now=True)
     host_goals = models.IntegerField(default=0)
     guest_goals = models.IntegerField(default=0)
-    events = models.ManyToManyField(Event)
+    events = models.ManyToManyField('Event', related_name='events')
 
     def __str__(self):
         return f"{self.host_goals} {self.guest_goals}"
@@ -50,20 +58,19 @@ class Match(models.Model):
 
 class Queue(models.Model):
     id = models.AutoField(primary_key=True)
-    player = models.ForeignKey('Footballer', on_delete=models.CASCADE)
-    priority = models.CharField(max_length=10)
-    status = models.CharField(max_length=20)
+    match = models.ForeignKey('Match',on_delete=models.CASCADE, null=True)
+    status = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.player.name} - {self.status}"
+        return f"{self.status}"
 
 
 class Statistic(models.Model):
     id = models.AutoField(primary_key=True)
-    player = models.ForeignKey('Footballer', on_delete=models.CASCADE)
-    season = models.CharField(max_length=20, null=True)
+    footballer = models.ForeignKey('Footballer', on_delete=models.CASCADE)
+    season = models.CharField(max_length=30, null=True)
     matches_played = models.IntegerField(default=0)
     goals_scored = models.IntegerField(default=0)
     assists = models.IntegerField(default=0)
@@ -72,5 +79,5 @@ class Statistic(models.Model):
     minutes_played = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.player.name} - {str(self.season)}"
+        return f"{self.footballer.name} - {str(self.season)}"
 
