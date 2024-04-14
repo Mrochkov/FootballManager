@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container has-text-centered">
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Pozycja</th>
+                <th>Data</th>
+                <th>Gospodarz</th>
+                <th>Gość</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for match in matches %}
+            <tr>
+                <th>{{ forloop.counter }}</th>
+                <td>{{ match.date }}</td>
+                <td>{{ match.host_team }}</td>
+                <td>{{ match.guest_team }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container has-text-centered">
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Pozycja</th>
+                <th>Nazwa</th>
+                <th>Ilość meczy</th>
+                <th>Wygrane</th>
+                <th>Remisy</th>
+                <th>Przegrane</th>
+                <th>Gole strzelone</th>
+                <th>Gole stracone</th>
+                <th>Różnica goli</th>
+                <th>Punkty</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <tr>
+                <th>{{ forloop.counter }}</th>
+                <td>{{ team.name }}</td>
+                <td>55</td>
+                <td>{{ team.wins }}</td>
+                <td>{{ team.draws }}</td>
+                <td>{{ team.loses }}</td>
+                <td>{{ team.goals_scored }}</td>
+                <td>{{ team.goals_lost }}</td>
+                <td>55</td>
+                <td>55</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
