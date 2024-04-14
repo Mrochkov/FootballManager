@@ -6,6 +6,8 @@ app_name="Football Manager"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", views.TableView.as_view(), name="Table"),
     path("table/", views.TableView.as_view(), name="Table"),
-    path("", views.dashboard, name="dashboard"),
+    path("footballers/", views.FootballersView.as_view(), name="Footballers"),
+    path("matches/", views.MatchesView.as_view(), name="Matches"),
 ]
