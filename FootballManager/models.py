@@ -57,13 +57,11 @@ class Match(models.Model):
 
 class Queue(models.Model):
     id = models.AutoField(primary_key=True)
-    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True)
-    status = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    matches = models.ManyToManyField('Match')
+    position = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.status}"
+        return f"{self.position}"
 
 
 class Statistic(models.Model):

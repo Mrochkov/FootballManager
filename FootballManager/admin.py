@@ -7,6 +7,11 @@ class FootballerInline(admin.TabularInline):
     extra = 1
 
 
+class QueueInline(admin.TabularInline):
+    model = Queue
+    extra = 1
+
+
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'wins', 'draws', 'losses', 'goals_scored', 'goals_lost')
@@ -31,12 +36,15 @@ class MatchAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-        list_display = ('minute', 'footballer', 'match')
+        list_display = ('minute', 'footballer', 'match', 'event_type')
 
 
 @admin.register(Queue)
 class QueueAdmin(admin.ModelAdmin):
-        list_display = ('match', 'status', 'created_at', 'updated_at')
+        list_display = ('get_matches', 'position')
+
+        def get_matches(self, obj):
+            return obj.matches.count()
 
 
 @admin.register(Statistic)
