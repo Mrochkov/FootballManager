@@ -58,10 +58,9 @@ class Match(models.Model):
 class Queue(models.Model):
     id = models.AutoField(primary_key=True)
     matches = models.ManyToManyField('Match')
-    position = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.position}"
+        return f"{self.matches}"
 
 
 class Statistic(models.Model):

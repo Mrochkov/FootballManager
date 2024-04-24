@@ -36,17 +36,17 @@ class MatchAdmin(admin.ModelAdmin):
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-        list_display = ('minute', 'footballer', 'match', 'event_type')
+    list_display = ('minute', 'footballer', 'match', 'event_type')
 
 
 @admin.register(Queue)
 class QueueAdmin(admin.ModelAdmin):
-        list_display = ('get_matches', 'position')
+    list_display = ('id', 'amount_of_matches')
 
-        def get_matches(self, obj):
-            return obj.matches.count()
+    def amount_of_matches(self, obj):
+        return obj.matches.count()
 
 
 @admin.register(Statistic)
 class Statistic(admin.ModelAdmin):
-        list_display = ('footballer', 'matches_played', 'goals_scored', 'assists', 'yellow_cards', 'red_cards')
+    list_display = ('footballer', 'matches_played', 'goals_scored', 'assists', 'yellow_cards', 'red_cards')
