@@ -12,7 +12,11 @@ class TableView(generic.ListView):
     context_object_name = "teams"
 
     def get_queryset(self):
-        return Team.objects.order_by("-name")
+        teams = Team.objects.all()
+        for team in teams:
+            team.points = team.wins * 3 + team.draws
+            team.goals_balance = team.goals_scored - team.goals_lost
+        return teams
 
     
 class FootballersView(generic.ListView):
