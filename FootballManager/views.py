@@ -8,6 +8,7 @@ from .models import Footballer, Team, Match, Queue, Statistic
 from .forms import FootballerForm
 from .forms import TeamForm
 
+
 class TableView(generic.ListView):
     template_name = "FootballManager/table.html"
     context_object_name = "teams"
@@ -19,7 +20,7 @@ class TableView(generic.ListView):
             team.goals_balance = team.goals_scored - team.goals_lost
         return teams
 
-    
+
 class FootballersView(generic.ListView):
     template_name = "FootballManager/footballers.html"
     context_object_name = "footballers"
@@ -81,4 +82,8 @@ def Add_Team(request):
             return redirect('Table')
     else:
         form = TeamForm()
-    return render(request, 'FootballManager/add_team.html', {'form': form})
+
+    teams = Team.objects.all()
+    context = {'form': form, 'teams': teams}
+
+    return render(request, 'FootballManager/add_team.html', context)
