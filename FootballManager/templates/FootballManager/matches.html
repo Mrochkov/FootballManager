@@ -9,6 +9,8 @@
                 <th>Data</th>
                 <th>Gospodarz</th>
                 <th>Gość</th>
+                <th>Wynik</th>
+                <th>Wydarzenia</th>
             </tr>
         </thead>
         <tbody>
@@ -18,11 +20,19 @@
                 <td>{{ match.date }}</td>
                 <td>{{ match.host_team }}</td>
                 <td>{{ match.guest_team }}</td>
+                <td>{{ match.host_goals }} : {{ match.guest_goals }}</td>
+                <td>
+                    <ul>
+                        {% for event in match.event_set.all %}
+                            <li>{{ event.get_event_type_display }} - {{ event.minute }}' ({{ event.footballer }})</li>
+                        {% endfor %}
+                    </ul>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="/add_match" class="button is-rounded">Dodaj Mecz</a>
+    <a href="/add_match" class="button is-rounded">Dodaj mecz</a>
 
 </div>
 {% endblock %}

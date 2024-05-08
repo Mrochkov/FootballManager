@@ -34,8 +34,8 @@ class Event(models.Model):
 
     class EventType(models.TextChoices):
         GOAL = 'GOAL', 'Goal'
-        YELLOW_CARD = 'YELLOW CARD', 'Yellow Card'
-        RED_CARD = 'RED CARD', 'Red Card'
+        YELLOW_CARD = 'YELLOW CARD', 'Yellow card'
+        RED_CARD = 'RED CARD', 'Red card'
 
     event_type = models.CharField(max_length=20, choices=EventType.choices, default=EventType.GOAL)
 
@@ -47,7 +47,7 @@ class Match(models.Model):
     id = models.AutoField(primary_key=True)
     host_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='host_team', null=True)
     guest_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='guest_team', null=True)
-    date = models.DateField(auto_now=True)
+    date = models.DateTimeField(null=True)
     host_goals = models.IntegerField(default=0)
     guest_goals = models.IntegerField(default=0)
 

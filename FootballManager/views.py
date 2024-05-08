@@ -55,14 +55,6 @@ class StatisticView(generic.ListView):
     def get_queryset(self):
         return Statistic.objects.order_by("-goals_scored")
     
-#class AddFootballerView(generic.CreateView):
- #   form = FootballerForm()
-  #  template_name = "FootballManager/add_footballer.html"
-   # context = {'form': form}
-#
-#    def get_queryset(self, form):
-#       return super().form_valid(form)
-
 
 def Add_Footballer(request):
     form = FootballerForm()
