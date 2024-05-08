@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
-app_name="Football Manager"
+app_name = "football_manager"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -13,4 +13,5 @@ urlpatterns = [
     path("queue/", views.QueueView.as_view(), name="Queue"),
     path("statistics/", views.StatisticView.as_view(), name="Statistic"),
     path("add_footballer/", views.Add_Footballer, name="Add footballer"),
+    path("add_team/", views.Add_Team, name="Add team"),
 ]
