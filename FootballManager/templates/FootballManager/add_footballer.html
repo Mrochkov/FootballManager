@@ -4,24 +4,24 @@
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-half">
-            <h1 class="title has-text-centered">Add Team</h1>
+            <h1 class="title has-text-centered">Dodaj zawodnika</h1>
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
                     <div class="field">
-                        <label class="label">Name</label>
+                        <label class="label">Imie</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" placeholder="Enter player name">
+                            <input class="input" type="text" name="name" placeholder="Wprowadź imie gracza">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Surname</label>
+                        <label class="label">Nazwisko</label>
                         <div class="control">
-                            <input class="input" type="text" name="surname" placeholder="Enter surname">
+                            <input class="input" type="text" name="surname" placeholder="Wprowadź nazwisko">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Team</label>
+                        <label class="label">Wybierz drużynę w której gra zawodnik</label>
                         <div class="control">
                             <div class="select">
                                 {{form.team}}
@@ -32,8 +32,8 @@
 
                     <div class="field">
                         <div class="control has-text-centered">
-                            <button class="button is-primary" type="submit">Add Footballer</button>
-                            <a class="button is-light" href="{% url 'Footballers' %}">Cancel</a>
+                            <button class="button is-primary" type="submit">Dodaj zawodnika</button>
+                            <a class="button is-light" href="{% url 'Footballers' %}">Anuluj</a>
                         </div>
                     </div>
                 </form>

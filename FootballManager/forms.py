@@ -3,6 +3,8 @@ from .models import Footballer
 from .models import Team
 from .models import Match
 from django import forms
+from .models import Queue
+
 
 class FootballerForm(ModelForm):
     class Meta:
@@ -26,5 +28,11 @@ class MatchForm(ModelForm):
         host_team = cleaned_data.get('host_team')
         guest_team = cleaned_data.get('guest_team')
         if host_team == guest_team:
-            raise forms.ValidationError("Host team and guest team cannot be the same.")
+            raise forms.ValidationError("Drużyna gospodarzy nie może być taka sama jak drużyna gości.")
         return cleaned_data
+
+
+class QueueForm(ModelForm):
+    class Meta:
+        model = Queue
+        fields = '__all__'

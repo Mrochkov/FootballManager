@@ -15,4 +15,6 @@ urlpatterns = [
     path("add_footballer/", views.Add_Footballer, name="Add footballer"),
     path("add_team/", views.Add_Team, name="Add team"),
     path("add_match/", views.Add_Match, name="Add match"),
+    path("add_to_queue/<int:queue_id>/", views.Add_to_queue, name="Add to queue"),
+
 ]

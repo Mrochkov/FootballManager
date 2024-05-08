@@ -3,11 +3,14 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
+from django.views.decorators.http import require_POST
 
 from .models import Footballer, Team, Match, Queue, Statistic
 from .forms import FootballerForm
 from .forms import TeamForm
 from .forms import MatchForm
+from .forms import QueueForm
+
 
 class TableView(generic.ListView):
     template_name = "FootballManager/table.html"
@@ -98,3 +101,24 @@ def Add_Match(request):
 
     context = {'form': form}
     return render(request, 'FootballManager/add_match.html', context)
+
+
+def Add_to_queue(request, queue_id):
+    queue = get_object_or_404(Queue, pk=queue_id)
+    matches = Match.objects.all()
+
+    if request.method == 'POST':
+        match_ids = request.POST.getlist('matches[]')
+        selected_matches = Match.objects.filter(pk__in=match_ids)
+
+        for match in queue.matches.all():
+            if match not in selected_matches:
+                queue.matches.remove(match)
+
+        for match in selected_matches:
+            queue.matches.add(match)
+
+        return redirect('Queue')
+
+    context = {'matches': matches, 'queue': queue}
+    return render(request, 'FootballManager/add_to_queue.html', context)
