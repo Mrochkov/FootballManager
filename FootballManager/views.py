@@ -7,7 +7,7 @@ from django.views import generic
 from .models import Footballer, Team, Match, Queue, Statistic
 from .forms import FootballerForm
 from .forms import TeamForm
-
+from .forms import MatchForm
 
 class TableView(generic.ListView):
     template_name = "FootballManager/table.html"
@@ -83,7 +83,18 @@ def Add_Team(request):
     else:
         form = TeamForm()
 
-    teams = Team.objects.all()
-    context = {'form': form, 'teams': teams}
-
+    context = {'form': form}
     return render(request, 'FootballManager/add_team.html', context)
+
+
+def Add_Match(request):
+    if request.method == 'POST':
+        form = MatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('Matches')
+    else:
+        form = MatchForm()
+
+    context = {'form': form}
+    return render(request, 'FootballManager/add_match.html', context)
