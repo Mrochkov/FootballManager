@@ -12,4 +12,5 @@ urlpatterns = [
     path("matches/", views.MatchesView.as_view(), name="Matches"),
     path("queue/", views.QueueView.as_view(), name="Queue"),
     path("statistics/", views.StatisticView.as_view(), name="Statistic"),
+    path("add_footballer/", views.Add_Footballer, name="Add footballer"),
 ]

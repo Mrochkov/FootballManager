@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.views import generic
 
 from .models import Footballer, Team, Match, Queue, Statistic
+from .forms import FootballerForm
 
 
 class TableView(generic.ListView):
@@ -49,3 +50,23 @@ class StatisticView(generic.ListView):
 
     def get_queryset(self):
         return Statistic.objects.order_by("-goals_scored")
+    
+#class AddFootballerView(generic.CreateView):
+ #   form = FootballerForm()
+  #  template_name = "FootballManager/add_footballer.html"
+   # context = {'form': form}
+#
+#    def get_queryset(self, form):
+#       return super().form_valid(form)
+    
+def Add_Footballer(request):
+    form = FootballerForm()
+
+    if request.method == 'POST':
+        form = FootballerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return FootballersView.as_view()
+    template_name = "FootballManager/add_footballer.html"
+    context = {'form': form}
+    return render(request, template_name, context)
