@@ -4,51 +4,51 @@
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-half">
-            <h1 class="title has-text-centered">Add Team</h1>
+            <h1 class="title has-text-centered">Dodaj drużynę</h1>
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
                     <div class="field">
-                        <label class="label">Team Name</label>
+                        <label class="label">Nazwa drużyny</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" placeholder="Enter team name">
+                            <input class="input" type="text" name="name" placeholder="Wprowadź nazwę drużyny">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Wins</label>
+                        <label class="label">Wygrane</label>
                         <div class="control">
-                            <input class="input" type="number" name="wins" placeholder="Enter wins">
+                            <input class="input" type="number" name="wins" placeholder="Wprowadź wygrane">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Draws</label>
+                        <label class="label">Remisy</label>
                         <div class="control">
-                            <input class="input" type="number" name="draws" placeholder="Enter draws">
+                            <input class="input" type="number" name="draws" placeholder="Wprowadź remisy">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Losses</label>
+                        <label class="label">Przegrane</label>
                         <div class="control">
-                            <input class="input" type="number" name="losses" placeholder="Enter losses">
+                            <input class="input" type="number" name="losses" placeholder="Wprowadź przegrane">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Goals scored</label>
+                        <label class="label">Strzelone gole</label>
                         <div class="control">
-                            <input class="input" type="number" name="goals_scored" placeholder="Enter goals scored">
+                            <input class="input" type="number" name="goals_scored" placeholder="Wprowadź strzelone gole">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Goals lost</label>
+                        <label class="label">Stracone gole</label>
                         <div class="control">
-                            <input class="input" type="number" name="goals_lost" placeholder="Enter goals lost">
+                            <input class="input" type="number" name="goals_lost" placeholder="Wprowadź stracone gole">
                         </div>
                     </div>
 
                     <div class="field">
                         <div class="control has-text-centered">
-                            <button class="button is-primary" type="submit">Add Team</button>
-                            <a class="button is-light" href="{% url 'Table' %}">Cancel</a>
+                            <button class="button is-primary" type="submit">Dodaj</button>
+                            <a class="button is-light" href="{% url 'Table' %}">Anuluj</a>
                         </div>
                     </div>
                 </form>

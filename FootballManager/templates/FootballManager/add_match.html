@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Dodaj drużynę</h1>
+            <div class="box">
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <span class="error-message">{{ form.non_field_errors }} </span>
+                    <div class="field">
+                        <label class="label">Gospodarze</label>
+                        <div class="control">
+                            <div class="select">
+                                {{form.host_team}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Gole gospodarzy</label>
+                        <div class="control">
+                            <input class="input" type="number" name="host_goals" placeholder="Wprowadź ilość goli gospodarzy">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Goście</label>
+                        <div class="control">
+                            <div class="select">
+                                {{form.guest_team}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Gole gości</label>
+                        <div class="control">
+                            <input class="input" type="number" name="guest_goals" placeholder="Wprowadź ilość goli gości">
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="control has-text-centered">
+                            <button class="button is-primary" type="submit">Dodaj gracza</button>
+                            <a class="button is-light" href="{% url 'Matches' %}">Anuluj</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.9em;
+    }
+</style>
+
+{% endblock %}
