@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Add Team</h1>
+            <div class="box">
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">Team Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" placeholder="Enter team name">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Wins</label>
+                        <div class="control">
+                            <input class="input" type="number" name="wins" placeholder="Enter wins">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Draws</label>
+                        <div class="control">
+                            <input class="input" type="number" name="draws" placeholder="Enter draws">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Losses</label>
+                        <div class="control">
+                            <input class="input" type="number" name="losses" placeholder="Enter losses">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Goals scored</label>
+                        <div class="control">
+                            <input class="input" type="number" name="goals_scored" placeholder="Enter goals scored">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Goals lost</label>
+                        <div class="control">
+                            <input class="input" type="number" name="goals_lost" placeholder="Enter goals lost">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control has-text-centered">
+                            <button class="button is-primary" type="submit">Add Team</button>
+                            <a class="button is-light" href="{% url 'Table' %}">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

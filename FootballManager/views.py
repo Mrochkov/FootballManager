@@ -1,12 +1,12 @@
 from django.db.models import F
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 
 from .models import Footballer, Team, Match, Queue, Statistic
 from .forms import FootballerForm
-
+from .forms import TeamForm
 
 class TableView(generic.ListView):
     template_name = "FootballManager/table.html"
@@ -58,7 +58,8 @@ class StatisticView(generic.ListView):
 #
 #    def get_queryset(self, form):
 #       return super().form_valid(form)
-    
+
+
 def Add_Footballer(request):
     form = FootballerForm()
 
@@ -66,7 +67,18 @@ def Add_Footballer(request):
         form = FootballerForm(request.POST)
         if form.is_valid():
             form.save()
-            return FootballersView.as_view()
+            return redirect('Footballers')
     template_name = "FootballManager/add_footballer.html"
     context = {'form': form}
     return render(request, template_name, context)
+
+
+def Add_Team(request):
+    if request.method == 'POST':
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('Table')
+    else:
+        form = TeamForm()
+    return render(request, 'FootballManager/add_team.html', {'form': form})
