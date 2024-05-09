@@ -1,20 +1,33 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Log In</legend>
-                    {{ form }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Login</button>
+<div class="container is-max-desktop mt-6">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Logowanie</h1>
+            <div class="box">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">Nazwa użytkownika</label>
+                        <div class="control">
+                            <input class="input" type="text" name="username" placeholder="Nazwa użytkownika">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Hasło</label>
+                        <div class="control">
+                            <input class="input" type="password" name="password" placeholder="Hasło">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control has-text-centered">
+                            <button class="button is-primary" type="submit">Zaloguj</button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                <a href="/">Forgot password?</a>
-            </small>
         </div>
     </div>
-{% endblock content %}
+</div>
+{% endblock %}
