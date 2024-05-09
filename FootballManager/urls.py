@@ -6,6 +6,8 @@ app_name = "football_manager"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('login', views.custom_login, name='login'),
+    path('logout', views.custom_logout, name='logout'),
     path("", views.TableView.as_view(), name="Table"),
     path("table/", views.TableView.as_view(), name="Table"),
     path("footballers/", views.FootballersView.as_view(), name="Footballers"),

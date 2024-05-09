@@ -41,7 +41,9 @@
                     </div>
                 </td>
                 <td>
-                    <a href="{% url 'Add to queue' queue.id %}" class="button is-primary">Edytuj kolejkę</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'Add to queue' queue.id %}" class="button is-primary">Edytuj kolejkę</a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

@@ -29,11 +29,13 @@
                 <td>{{ team.goals_scored }}</td>
                 <td>{{ team.goals_lost }}</td>
                 <td>{{ team.goals_balance }}</td>
-                <td>{{ team.points }} </td>
+                <td>{{ team.points }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="/add_team" class="button is-rounded">Dodaj drużynę</a>
+    {% if user.is_authenticated %}
+        <a href="/add_team" class="button is-rounded">Dodaj drużynę</a>
+    {% endif %}
 </div>
 {% endblock %}
