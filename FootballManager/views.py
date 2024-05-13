@@ -27,6 +27,14 @@ class TableView(generic.ListView):
             team.points = team.wins * 3 + team.draws
             team.goals_balance = team.goals_scored - team.goals_lost
         return teams
+    
+
+class TeamsView(generic.ListView):
+    template_name = "FootballManager/teams.html"
+    context_object_name = "teams"
+
+    def get_queryset(self):
+        return Team.objects.order_by("-name")
 
 
 class FootballersView(generic.ListView):
@@ -79,7 +87,7 @@ def Add_Team(request):
         form = TeamForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('Table')
+            return redirect('Teams')
     else:
         form = TeamForm()
 

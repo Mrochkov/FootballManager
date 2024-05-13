@@ -15,7 +15,7 @@ class FootballerForm(ModelForm):
 class TeamForm(ModelForm):
     class Meta:
         model = Team
-        fields = '__all__'
+        fields = ['name', 'trainer']
 
 
 class MatchForm(ModelForm):

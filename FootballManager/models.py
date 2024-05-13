@@ -1,11 +1,10 @@
-from datetime import datetime, timezone
-
 from django.db import models
 
 
 class Team(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
+    trainer = models.CharField(max_length=60)
     wins = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
