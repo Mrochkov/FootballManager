@@ -1,13 +1,14 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from django.db import models
 
 
 from .models import Footballer, Team, Match, Queue, Statistic
@@ -19,12 +20,16 @@ class TableView(generic.ListView):
     context_object_name = "teams"
 
     def get_queryset(self):
-        teams = Team.objects.all()
+        teams = Team.objects.annotate(
+            host_matches_count=models.Count('host_team', filter=Q(host_team__isnull=False)),
+            guest_matches_count=models.Count('guest_team', filter=Q(guest_team__isnull=False)),
+        )
         for team in teams:
+            team.matches_count = team.host_matches_count + team.guest_matches_count
             team.points = team.wins * 3 + team.draws
             team.goals_balance = team.goals_scored - team.goals_lost
         return teams
-    
+
 
 class TeamsView(generic.ListView):
     template_name = "FootballManager/teams.html"

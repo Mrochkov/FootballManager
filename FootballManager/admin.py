@@ -14,7 +14,7 @@ class QueueInline(admin.TabularInline):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'wins', 'draws', 'losses', 'goals_scored', 'goals_lost')
+    list_display = ('name', 'wins', 'draws', 'losses', 'goals_scored', 'goals_lost', 'trainer', 'matches_played')
     inlines = [FootballerInline]
 
 
