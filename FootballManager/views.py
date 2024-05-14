@@ -1,14 +1,14 @@
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import F
+from django.db.models import F, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-
+from django.db import models, transaction
 
 from .models import Footballer, Team, Match, Queue, Statistic
 from .forms import FootballerForm, TeamForm, MatchForm, QueueForm, EventForm
@@ -19,12 +19,16 @@ class TableView(generic.ListView):
     context_object_name = "teams"
 
     def get_queryset(self):
-        teams = Team.objects.all()
+        teams = Team.objects.annotate(
+            host_matches_count=models.Count('host_team', filter=Q(host_team__isnull=False)),
+            guest_matches_count=models.Count('guest_team', filter=Q(guest_team__isnull=False)),
+        )
         for team in teams:
+            team.matches_count = team.host_matches_count + team.guest_matches_count
             team.points = team.wins * 3 + team.draws
             team.goals_balance = team.goals_scored - team.goals_lost
         return teams
-    
+
 
 class TeamsView(generic.ListView):
     template_name = "FootballManager/teams.html"
@@ -92,23 +96,56 @@ def Add_Team(request):
     return render(request, 'FootballManager/add_team.html', context)
 
 
+def update_team_statistics(team, goals_scored, goals_lost, is_winner, is_draw):
+    if is_winner:
+        team.wins += 1
+    elif is_draw:
+        team.draws += 1
+    else:
+        team.losses += 1
+
+    team.goals_scored += goals_scored
+    team.goals_lost += goals_lost
+    team.save()
+
+@transaction.atomic
+def update_team_stats_for_match(host_team, guest_team, host_goals, guest_goals):
+    if host_goals > guest_goals:
+        update_team_statistics(host_team, host_goals, guest_goals, is_winner=True, is_draw=False)
+        update_team_statistics(guest_team, guest_goals, host_goals, is_winner=False, is_draw=False)
+    elif host_goals < guest_goals:
+        update_team_statistics(host_team, host_goals, guest_goals, is_winner=False, is_draw=False)
+        update_team_statistics(guest_team, guest_goals, host_goals, is_winner=True, is_draw=False)
+    else:
+        update_team_statistics(host_team, host_goals, guest_goals, is_winner=False, is_draw=True)
+        update_team_statistics(guest_team, guest_goals, host_goals, is_winner=False, is_draw=True)
+
 def Add_Match(request):
     footballers = Footballer.objects.all()
 
     if request.method == 'POST':
         match_form = MatchForm(request.POST)
-        event_form = EventForm(request.POST)
-        if match_form.is_valid() and event_form.is_valid():
-            match_form.save()
-            event_form.save()
+        #event_form = EventForm(request.POST)
+        if match_form.is_valid(): #and event_form.is_valid():
+            match = match_form.save(commit=False)
+            match.save()
+            #event_form.instance.match = match
+            #event_form.save()
+
+            update_team_stats_for_match(
+                match.host_team,
+                match.guest_team,
+                match.host_goals,
+                match.guest_goals
+            )
+
             return redirect('Matches')
     else:
         match_form = MatchForm()
-        event_form = EventForm()
+        #event_form = EventForm()
 
-    context = {'match_form': match_form, 'event_form': event_form, 'footballers': footballers}
+    context = {'match_form': match_form, """" 'event_form': event_form, """ 'footballers': footballers}
     return render(request, 'FootballManager/add_match.html', context)
-
 
 def Add_to_queue(request, queue_id):
     queue = get_object_or_404(Queue, pk=queue_id)

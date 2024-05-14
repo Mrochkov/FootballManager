@@ -11,6 +11,9 @@ class Team(models.Model):
     goals_scored = models.IntegerField(default=0)
     goals_lost = models.IntegerField(default=0)
 
+    def matches_played(self):
+        return Match.objects.filter(models.Q(host_team=self) | models.Q(guest_team=self)).count()
+
     def __str__(self):
         return f"{self.name}"
 
