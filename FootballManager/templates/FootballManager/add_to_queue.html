@@ -9,7 +9,7 @@
         <div class="field">
             <input type="checkbox" id="match{{ match.id }}" name="matches[]" value="{{ match.id }}"
                    {% if match in queue.matches.all %}checked{% endif %}>
-            <label for="match{{ match.id }}">{{ match.host_team.name }} ---- {{ match.guest_team.name }}</label>
+            <label for="match{{ match.id }}">{{ match.host_team.name }} - {{ match.guest_team.name }}</label>
         </div>
         {% endfor %}
         <div class="field">

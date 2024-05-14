@@ -51,7 +51,7 @@ class Match(models.Model):
     guest_goals = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.host_goals} {self.guest_goals}"
+        return f"{self.host_team} {self.host_goals} - {self.guest_goals} {self.guest_team}"
 
 
 class Queue(models.Model):

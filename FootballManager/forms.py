@@ -17,8 +17,13 @@ class TeamForm(ModelForm):
         model = Team
         fields = ['name', 'trainer']
 
+class EventForm(ModelForm):
+    class Meta:
+        model = Queue
+        fields = '__all__'
 
 class MatchForm(ModelForm):
+    event_form = EventForm()
     class Meta:
         model = Match
         fields = '__all__'

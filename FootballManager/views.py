@@ -11,10 +11,7 @@ from django.contrib import messages
 
 
 from .models import Footballer, Team, Match, Queue, Statistic
-from .forms import FootballerForm
-from .forms import TeamForm
-from .forms import MatchForm
-from .forms import QueueForm
+from .forms import FootballerForm, TeamForm, MatchForm, QueueForm, EventForm
 
 
 class TableView(generic.ListView):
@@ -96,15 +93,20 @@ def Add_Team(request):
 
 
 def Add_Match(request):
+    footballers = Footballer.objects.all()
+
     if request.method == 'POST':
-        form = MatchForm(request.POST)
-        if form.is_valid():
-            form.save()
+        match_form = MatchForm(request.POST)
+        event_form = EventForm(request.POST)
+        if match_form.is_valid() and event_form.is_valid():
+            match_form.save()
+            event_form.save()
             return redirect('Matches')
     else:
-        form = MatchForm()
+        match_form = MatchForm()
+        event_form = EventForm()
 
-    context = {'form': form}
+    context = {'match_form': match_form, 'event_form': event_form, 'footballers': footballers}
     return render(request, 'FootballManager/add_match.html', context)
 
 
@@ -127,6 +129,7 @@ def Add_to_queue(request, queue_id):
 
     context = {'matches': matches, 'queue': queue}
     return render(request, 'FootballManager/add_to_queue.html', context)
+
 
 
 @login_required
