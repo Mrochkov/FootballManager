@@ -11,6 +11,9 @@
                 <th>Gość</th>
                 <th>Wynik</th>
                 <th>Wydarzenia</th>
+                {% if user.is_authenticated %}
+                <th>Akcje</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -20,7 +23,13 @@
                 <td>{{ match.date }}</td>
                 <td>{{ match.host_team }}</td>
                 <td>{{ match.guest_team }}</td>
-                <td>{{ match.host_goals }} : {{ match.guest_goals }}</td>
+                <td>
+                    {% if match.host_goals is not null and match.guest_goals is not null%}
+                        {{ match.host_goals }} : {{ match.guest_goals }}
+                    {% else %}
+                        
+                    {% endif %}
+                </td>
                 <td>
                     <ul>
                         {% for event in match.events.all %}
@@ -28,6 +37,16 @@
                         {% endfor %}
                     </ul>
                 </td>
+                {% if user.is_authenticated %}
+                <td>
+                    <a href="{% url 'Add match result' match.id %}" class="button is-small">
+                        <span class="icon">
+                            <i class="fas fa-edit"></i>
+                        </span>
+                        <span>Edytuj</span>
+                    </a>
+                </td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

@@ -77,8 +77,8 @@ class Match(models.Model):
     host_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='host_team', null=True)
     guest_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='guest_team', null=True)
     date = models.DateTimeField(null=True)
-    host_goals = models.IntegerField(default=0)
-    guest_goals = models.IntegerField(default=0)
+    host_goals = models.IntegerField(null=True)
+    guest_goals = models.IntegerField(null=True)
 
     def __str__(self):
         return f"{self.host_team} {self.host_goals} - {self.guest_goals} {self.guest_team}"

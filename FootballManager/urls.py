@@ -19,5 +19,6 @@ urlpatterns = [
     path("add_team/", views.Add_Team, name="Add team"),
     path("add_match/", views.Add_Match, name="Add match"),
     path("add_to_queue/<int:queue_id>/", views.Add_to_queue, name="Add to queue"),
+    path("add_match_result/<int:match_id>/", views.Add_Match_Result, name="Add match result"),
 
 ]

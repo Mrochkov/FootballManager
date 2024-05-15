@@ -29,13 +29,6 @@
                     </div>
 
                     <div class="field">
-                        <label class="label">Gole gospodarzy</label>
-                        <div class="control">
-                            <input class="input" type="number" name="host_goals" placeholder="Wprowadź ilość goli gospodarzy">
-                        </div>
-                    </div>
-
-                    <div class="field">
                         <label class="label">Goście</label>
                         <div class="control">
                             <div class="select">
@@ -43,87 +36,17 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="field">
-                        <label class="label">Gole gości</label>
-                        <div class="control">
-                            <input class="input" type="number" name="guest_goals" placeholder="Wprowadź ilość goli gości">
-                        </div>
-                    </div>
-
-
-                    <div id="events_section">
-                        <!-- Tutaj zostaną dodane formularze wydarzeń -->
-                    </div>
-                    <!--
-                    <div class="field">
-                        <div class="control has-text-centered">
-                            <button id="add_event_button" class="button is-link" type="button">Dodaj wydarzenie</button>
-                        </div>
-                    </div>
-                    -->
+                   
                     <div class="field">
                         <div class="control has-text-centered">
                             <button class="button is-primary" type="submit">Dodaj mecz</button>
                             <a class="button is-light" href="{% url 'Matches' %}">Anuluj</a>
                         </div>
                     </div>
-
                     
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const eventsSection = document.getElementById('events_section');
-        const addEventButton = document.getElementById('add_event_button');
-
-        let eventIndex = 0;
-
-        addEventButton.addEventListener('click', function () {
-            const eventFormHTML = `
-                <div class="field">
-                    <label class="label">Wydarzenie ${eventIndex + 1}</label>
-                </div>
-                <div class="columns is-multiline is-mobile">
-                    <div class="column is-one-quarter">
-                        <label class="label">Minuta</label>
-                        <div class="control">
-                                <input class="input" type="number" name="minute" placeholder="Wpisz minutę">
-                        </div>
-                    </div>
-                    <div class="column is-half">
-                        <label class="label">Piłkarz</label>
-                        <div class="control">
-                            <div class="select">
-                                <select name="footballer">
-                                    {% for footballer in footballers %}
-                                        <option value="{{ footballer.id }}">{{ footballer.name }} {{ footballer.surname }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-one-quarter">
-                        <label class="label">Rodzaj</label>
-                        <div class="control">
-                            <div class="select">
-                                    {{ event_form.event_type }}
-                            </div>
-                        </div>
-                    </div>
-                </div
-            `;
-            const eventFormElement = document.createElement('div');
-            eventFormElement.innerHTML = eventFormHTML;
-            eventsSection.appendChild(eventFormElement);
-
-            eventIndex++;
-        });
-    });
-</script>
 {% endblock %}

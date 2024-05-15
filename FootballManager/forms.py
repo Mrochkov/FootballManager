@@ -23,10 +23,9 @@ class EventForm(ModelForm):
         fields = '__all__'
 
 class MatchForm(ModelForm):
-    event_form = EventForm()
     class Meta:
         model = Match
-        fields = '__all__'
+        fields = ['date', 'host_team', 'guest_team']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -36,6 +35,10 @@ class MatchForm(ModelForm):
             raise forms.ValidationError("Drużyna gospodarzy nie może być taka sama jak drużyna gości.")
         return cleaned_data
 
+class MatchResultForm(ModelForm):
+    class Meta:
+        model = Match
+        fields = ['host_goals', 'guest_goals']
 
 class QueueForm(ModelForm):
     class Meta:

@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.db import models, transaction
 
 from .models import Footballer, Team, Match, Queue, Statistic
-from .forms import FootballerForm, TeamForm, MatchForm, QueueForm, EventForm
+from .forms import FootballerForm, TeamForm, MatchForm, QueueForm, EventForm, MatchResultForm
 
 
 class TableView(generic.ListView):
@@ -124,30 +124,37 @@ def update_team_stats_for_match(host_team, guest_team, host_goals, guest_goals):
 
 
 def Add_Match(request):
-    footballers = Footballer.objects.all()
-
     if request.method == 'POST':
         match_form = MatchForm(request.POST)
-        #event_form = EventForm(request.POST)
-        if match_form.is_valid(): #and event_form.is_valid():
-            match = match_form.save()
-            #event_form.instance.match = match
-            #event_form.save()
-
-            update_team_stats_for_match(
-                match.host_team,
-                match.guest_team,
-                match.host_goals,
-                match.guest_goals
-            )
+        if match_form.is_valid():
+            match_form.save()
+            
 
             return redirect('Matches')
     else:
         match_form = MatchForm()
-        #event_form = EventForm()
 
-    context = {'match_form': match_form, """"'event_form': event_form,""" 'footballers': footballers}
+    context = {'match_form': match_form}
     return render(request, 'FootballManager/add_match.html', context)
+
+def Add_Match_Result(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if request.method == 'POST':
+        matchresult_form = MatchResultForm(request.POST)
+        if matchresult_form.is_valid():
+            matchresult = matchresult_form.save()
+            update_team_stats_for_match(
+                            match.host_team,
+                            match.guest_team,
+                            matchresult.host_goals,
+                            matchresult.guest_goals
+                        )
+            return redirect('Matches')
+    else:
+        matchresult_form = MatchResultForm()
+
+    context = {'match': match, 'matchresult_form': matchresult_form}
+    return render(request, 'FootballManager/add_match_result.html', context)
 
 
 def Add_to_queue(request, queue_id):
