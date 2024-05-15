@@ -67,7 +67,7 @@ class StatisticView(generic.ListView):
     context_object_name = "statistics"
 
     def get_queryset(self):
-        return Statistic.objects.order_by("-goals_scored")
+        return Statistic.objects.select_related('footballer').order_by("-goals_scored")
     
 
 def Add_Footballer(request):
@@ -76,8 +76,10 @@ def Add_Footballer(request):
     if request.method == 'POST':
         form = FootballerForm(request.POST)
         if form.is_valid():
-            form.save()
+            footballer = form.save()
+            Statistic.objects.create(footballer=footballer)
             return redirect('Footballers')
+
     template_name = "FootballManager/add_footballer.html"
     context = {'form': form}
     return render(request, template_name, context)
@@ -120,6 +122,7 @@ def update_team_stats_for_match(host_team, guest_team, host_goals, guest_goals):
         update_team_statistics(host_team, host_goals, guest_goals, is_winner=False, is_draw=True)
         update_team_statistics(guest_team, guest_goals, host_goals, is_winner=False, is_draw=True)
 
+
 def Add_Match(request):
     footballers = Footballer.objects.all()
 
@@ -127,8 +130,7 @@ def Add_Match(request):
         match_form = MatchForm(request.POST)
         #event_form = EventForm(request.POST)
         if match_form.is_valid(): #and event_form.is_valid():
-            match = match_form.save(commit=False)
-            match.save()
+            match = match_form.save()
             #event_form.instance.match = match
             #event_form.save()
 
@@ -144,8 +146,9 @@ def Add_Match(request):
         match_form = MatchForm()
         #event_form = EventForm()
 
-    context = {'match_form': match_form, """" 'event_form': event_form, """ 'footballers': footballers}
+    context = {'match_form': match_form, """"'event_form': event_form,""" 'footballers': footballers}
     return render(request, 'FootballManager/add_match.html', context)
+
 
 def Add_to_queue(request, queue_id):
     queue = get_object_or_404(Queue, pk=queue_id)

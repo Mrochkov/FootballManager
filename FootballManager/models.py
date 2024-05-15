@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 
 
 class Team(models.Model):
@@ -32,10 +32,37 @@ class Event(models.Model):
     id = models.AutoField(primary_key=True)
     minute = models.IntegerField(blank=False, default=0)
     footballer = models.ForeignKey('Footballer', on_delete=models.CASCADE, null=True)
-    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True)
+    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True, related_name='events')
+
+    def update_statistics(self):
+        if self.event_type == self.EventType.GOAL:
+            Statistic.objects.filter(footballer=self.footballer).update(goals_scored=models.F('goals_scored') + 1)
+        elif self.event_type == self.EventType.ASSIST:
+            Statistic.objects.filter(footballer=self.footballer).update(assists=models.F('assists') + 1)
+        elif self.event_type == self.EventType.YELLOW_CARD:
+            Statistic.objects.filter(footballer=self.footballer).update(yellow_cards=models.F('yellow_cards') + 1)
+        elif self.event_type == self.EventType.RED_CARD:
+            Statistic.objects.filter(footballer=self.footballer).update(red_cards=models.F('red_cards') + 1)
+
+        Statistic.objects.filter(footballer=self.footballer).update(matches_played=models.F('matches_played') + 1)
+
+    def update_match_score(self):
+        if self.event_type == self.EventType.GOAL:
+            if self.match.host_team == self.footballer.team:
+                self.match.host_goals += 1
+            elif self.match.guest_team == self.footballer.team:
+                self.match.guest_goals += 1
+            self.match.save()
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            self.update_statistics()
+            self.update_match_score()
 
     class EventType(models.TextChoices):
         GOAL = 'GOAL', 'Goal'
+        ASSIST = 'ASSIST', 'Assist'
         YELLOW_CARD = 'YELLOW CARD', 'Yellow card'
         RED_CARD = 'RED CARD', 'Red card'
 
