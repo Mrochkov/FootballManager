@@ -23,7 +23,7 @@
                 <td>{{ match.host_goals }} : {{ match.guest_goals }}</td>
                 <td>
                     <ul>
-                        {% for event in match.event_set.all %}
+                        {% for event in match.events.all %}
                             <li>{{ event.get_event_type_display }} - {{ event.minute }}' ({{ event.footballer }})</li>
                         {% endfor %}
                     </ul>
