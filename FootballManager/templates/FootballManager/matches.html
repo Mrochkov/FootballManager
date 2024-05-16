@@ -25,15 +25,15 @@
                 <td>{{ match.guest_team }}</td>
                 <td>
                     {% if match.host_goals is not null and match.guest_goals is not null%}
-                        {{ match.host_goals }} : {{ match.guest_goals }}
+                    {{ match.host_goals }} : {{ match.guest_goals }}
                     {% else %}
-                        
+                    -
                     {% endif %}
                 </td>
                 <td>
                     <ul>
                         {% for event in match.events.all %}
-                            <li>{{ event.get_event_type_display }} - {{ event.minute }}' ({{ event.footballer }})</li>
+                        <li>{{ event.get_event_type_display }} - {{ event.minute }}' ({{ event.footballer }})</li>
                         {% endfor %}
                     </ul>
                 </td>
@@ -45,6 +45,12 @@
                         </span>
                         <span>Edytuj</span>
                     </a>
+                    <a href="{% url 'Delete match' match.id %}" class="button is-small is-danger">
+                        <span class="icon">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        <span>Usuń</span>
+                    </a>
                 </td>
                 {% endif %}
             </tr>
@@ -52,7 +58,7 @@
         </tbody>
     </table>
     {% if user.is_authenticated %}
-        <a href="/matches/add" class="button is-rounded">Dodaj mecz</a>
+    <a href="/matches/add" class="button is-rounded">Dodaj mecz</a>
     {% endif %}
 </div>
 {% endblock %}

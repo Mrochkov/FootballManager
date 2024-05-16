@@ -1,5 +1,5 @@
 from django.views import generic
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from FootballManager.models import Team
 from FootballManager.forms import TeamForm
 
@@ -21,3 +21,28 @@ def Add_Team(request):
 
     context = {'form': form}
     return render(request, 'FootballManager/add_team.html', context)
+
+def Info_Team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    context = {'team': team}
+    return render(request, 'FootballManager/info_team.html', context)
+
+def Edit_Team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+
+    if request.method == 'POST':
+        form = TeamForm(request.POST, instance=team)
+        if form.is_valid():
+            form.save()
+            return redirect('Teams')
+    else:
+        form = TeamForm(instance=team)
+
+    context = {'team': team}
+    return render(request, 'FootballManager/edit_team.html', context)
+
+def Delete_Team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    team.delete()
+    return redirect('Teams')
+

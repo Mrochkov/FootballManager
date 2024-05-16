@@ -25,8 +25,9 @@ def Add_Match(request):
 
 def Add_Match_Result(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
+    
     if request.method == 'POST':
-        matchresult_form = MatchResultForm(request.POST)
+        matchresult_form = MatchResultForm(request.POST, instance=match)
         if matchresult_form.is_valid():
             matchresult = matchresult_form.save()
             update_team_stats_for_match(
@@ -37,10 +38,16 @@ def Add_Match_Result(request, match_id):
             )
             return redirect('Matches')
     else:
-        matchresult_form = MatchResultForm()
+        matchresult_form = MatchResultForm(instance=match)
 
     context = {'match': match, 'matchresult_form': matchresult_form}
     return render(request, 'FootballManager/add_match_result.html', context)
+
+
+def Delete_Match(match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    match.delete()
+    return redirect('Matches')
 
 def update_team_statistics(team, goals_scored, goals_lost, is_winner, is_draw):
     if is_winner:
