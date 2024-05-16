@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib import admin
 from .views.table import TableView
 from .views.teams import TeamsView, Add_Team, Info_Team, Edit_Team, Delete_Team
-from .views.footballers import FootballersView, Add_Footballer
+from .views.footballers import FootballersView, Add_Footballer, Info_Footballer, Edit_Footballer, Delete_Footballer
 from .views.matches import  MatchesView, Add_Match, Add_Match_Result, Delete_Match
 from .views.queues import QueueView, Add_to_queue
 from .views.statistics import StatisticView
@@ -19,6 +19,9 @@ urlpatterns = [
     path('teams/delete/<int:team_id>/', Delete_Team, name='Delete team'),
     path('footballers/', FootballersView.as_view(), name='Footballers'),
     path('footballers/add/', Add_Footballer, name='Add Footballer'),
+    path('footballers/info/<int:footballer_id>/', Info_Footballer, name='Info footballer'),
+    path('footballers/edit/<int:footballer_id>/', Edit_Footballer, name='Edit footballer'),
+    path('footballers/delete/<int:footballer_id>/', Delete_Footballer, name='Delete footballer'),
     path('matches/', MatchesView.as_view(), name='Matches'),
     path('matches/add/', Add_Match, name='Add Match'),
     path('matches/result/<int:match_id>/', Add_Match_Result, name='Add match result'),

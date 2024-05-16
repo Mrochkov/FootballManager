@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Edytuj zawodnika</h1>
+            <div class="box">
+                <form method="post" class="form">
+                    {% csrf_token %}
+
+                    <div class="field">
+                        <label class="label">Imię zawodnika</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" 
+                                    {% if footballer.name is null or footballer.name == '' %}   
+                                        placeholder="Wprowadź imię zawodnika" 
+                                    {% else %} 
+                                        value="{{ footballer.name }}"
+                                    {% endif %}>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Nazwisko zawodnika</label>
+                        <div class="control">
+                            <input class="input" type="text" name="surname" 
+                                    {% if footballer.surname is null or footballer.surname == '' %}   
+                                        placeholder="Wprowadź nazwisko zawodnika" 
+                                    {% else %} 
+                                        value="{{ footballer.surname }}"
+                                    {% endif %}>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Drużyna</label>
+                        <div class="control">
+                            {% if footballer.team is None or footballer.team == '' %}   
+                                <div class="select"> {{ form.team }} </div>
+                            {% else %} 
+                                <div class="select">
+                                    {% for team in form.team %}
+                                        {% if team == footballer.team %}
+                                            <option selected>{{ team.name }}</option>
+                                        {% else %}
+                                            <option>{{ team.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control has-text-centered">
+                            <button class="button is-primary" type="submit">Zapisz</button>
+                            <a class="button is-light" href="{% url 'Footballers' %}">Anuluj</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
