@@ -24,14 +24,14 @@
                     </div>
                     <div id="navbarMenuHeroA" class="navbar-menu">
                         {% if user.is_authenticated %}
-                            <a class="navbar-item" href="{% url 'logout' %}">
+                            <a class="navbar-item" href="{% url 'Logout' %}">
                                 <p class="subtitle is-5">
                                     Log out
                                     <i class="fas fa-sign-out-alt"></i>
                                 </p>
                             </a>
                         {% else %}
-                            <a class="navbar-item" href="{% url 'login' %}">
+                            <a class="navbar-item" href="{% url 'Login' %}">
                                 <p class="subtitle is-5">
                                     Log in
                                     <i class="fas fa-sign-in-alt"></i>

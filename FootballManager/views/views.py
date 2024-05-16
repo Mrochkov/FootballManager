@@ -10,24 +10,11 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db import models, transaction
 
-from .models import Footballer, Team, Match, Queue, Statistic
-from .forms import FootballerForm, TeamForm, MatchForm, QueueForm, EventForm, MatchResultForm
+from FootballManager.models import Footballer, Team, Match, Queue, Statistic
+from FootballManager.forms import FootballerForm, TeamForm, MatchForm, QueueForm, EventForm, MatchResultForm
 
 
-class TableView(generic.ListView):
-    template_name = "FootballManager/table.html"
-    context_object_name = "teams"
 
-    def get_queryset(self):
-        teams = Team.objects.annotate(
-            host_matches_count=models.Count('host_team', filter=Q(host_team__isnull=False)),
-            guest_matches_count=models.Count('guest_team', filter=Q(guest_team__isnull=False)),
-        )
-        for team in teams:
-            team.matches_count = team.host_matches_count + team.guest_matches_count
-            team.points = team.wins * 3 + team.draws
-            team.goals_balance = team.goals_scored - team.goals_lost
-        return teams
 
 
 class TeamsView(generic.ListView):
