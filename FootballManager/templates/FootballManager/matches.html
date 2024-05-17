@@ -39,11 +39,23 @@
                 </td>
                 {% if user.is_authenticated %}
                 <td>
-                    <a href="{% url 'Add match result' match.id %}" class="button is-small">
+                    <a href="{% url 'Info match' match.id %}" class="button is-small is-info">
+                        <span class="icon">
+                            <i class="fas fa-info"></i>
+                        </span>
+                        <span>info</span>
+                    </a>
+                    <a href="{% url 'Edit match' match.id %}" class="button is-small">
                         <span class="icon">
                             <i class="fas fa-edit"></i>
                         </span>
                         <span>Edytuj</span>
+                    </a>
+                    <a href="{% url 'Add match result' match.id %}" class="button is-small is-warning">
+                        <span class="icon">
+                            <i class="fas fa-poll-h"></i>
+                        </span>
+                        <span>Dodaj wynik</span>
                     </a>
                     <a href="{% url 'Delete match' match.id %}" class="button is-small is-danger">
                         <span class="icon">

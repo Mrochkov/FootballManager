@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Edytuj mecz</h1>
+            <div class="box">
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">Data meczu</label>
+                        <div class="control">
+                            <input class="input" type="datetime-local" name="date"
+                                   {% if match.date %}  
+                                       value="{{ match.date|date:'Y-m-d\\TH:i' }}"
+                                   {% else %}
+                                       placeholder="Wprowadź datę meczu"
+                                   {% endif %}>
+                        </div>
+                    </div>
+                   <div class="field">
+                        <label class="label">Gospodarz</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="host_team">
+                                    {% for team in teams %}
+                                        <option value="{{ team.id }}" {% if match.host_team and match.host_team.id == team.id %}selected{% endif %}>
+                                            {{ team.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Goście</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="guest_team">
+                                    {% for team in teams %}
+                                        <option value="{{ team.id }}" {% if match.guest_team and match.guest_team.id == team.id %}selected{% endif %}>
+                                            {{ team.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="control has-text-centered">
+                            <button class="button is-primary" type="submit">Zapisz</button>
+                            <a class="button is-light" href="{% url 'Matches' %}">Anuluj</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

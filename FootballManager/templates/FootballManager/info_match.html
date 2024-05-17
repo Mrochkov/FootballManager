@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Informacje o meczu</h1>
+            <div class="box">
+                {% csrf_token %}
+                <div class="field">
+                    <label class="label">Data meczu</label>
+                    <div class="field">
+                        {{ match.date }}
+                    </div>
+                </div>
+                <div class="columns is-multiline is-mobile">
+                    <div class="column is-half">
+                        <label class="label">Gospodarze</label>
+                        <div class="control">
+                            {{ match.host_team }}
+                        </div>
+                    </div>
+
+                    <div class="column is-half">
+                        <label class="label">Goście</label>
+                        <div class="control">
+                            {{ match.guest_team }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control has-text-centered">
+                        <a class="button is-light" href="{% url 'Matches' %}">Wróć</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

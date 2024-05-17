@@ -13,7 +13,7 @@
                         <label class="label">Imię zawodnika</label>
                         <div class="control">
                             <input class="input" type="text" name="name" 
-                                    {% if footballer.name is null or footballer.name == '' %}   
+                                    {% if footballer.name is None or footballer.name == '' %}   
                                         placeholder="Wprowadź imię zawodnika" 
                                     {% else %} 
                                         value="{{ footballer.name }}"
@@ -25,7 +25,7 @@
                         <label class="label">Nazwisko zawodnika</label>
                         <div class="control">
                             <input class="input" type="text" name="surname" 
-                                    {% if footballer.surname is null or footballer.surname == '' %}   
+                                    {% if footballer.surname is None or footballer.surname == '' %}   
                                         placeholder="Wprowadź nazwisko zawodnika" 
                                     {% else %} 
                                         value="{{ footballer.surname }}"
@@ -36,20 +36,15 @@
                     <div class="field">
                         <label class="label">Drużyna</label>
                         <div class="control">
-                            {% if footballer.team is None or footballer.team == '' %}   
-                                <div class="select"> {{ form.team }} </div>
-                            {% else %} 
-                                <div class="select">
-                                    {% for team in form.team %}
-                                        {% if team == footballer.team %}
-                                            <option selected>{{ team.name }}</option>
-                                        {% else %}
-                                            <option>{{ team.name }}</option>
-                                        {% endif %}
+                            <div class="select">
+                                <select name="team">
+                                    {% for team in teams %}
+                                        <option value="{{ team.id }}" {% if footballer.team and footballer.team.id == team.id %}selected{% endif %}>
+                                            {{ team.name }}
+                                        </option>
                                     {% endfor %}
-                                </div>
-                            {% endif %}
-                            
+                                </select>
+                            </div>
                         </div>
                     </div>
 

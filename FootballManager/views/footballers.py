@@ -1,6 +1,6 @@
 from django.views import generic
 from django.shortcuts import render, redirect, get_object_or_404
-from FootballManager.models import Footballer, Statistic
+from FootballManager.models import Footballer, Statistic, Team
 from FootballManager.forms import FootballerForm
 
 class FootballersView(generic.ListView):
@@ -39,8 +39,11 @@ def Edit_Footballer(request, footballer_id):
     else:
         form = FootballerForm(instance=footballer)
 
-    context = {'form': form, 'footballer': footballer}
+    teams = Team.objects.all()
+
+    context = {'form': form, 'footballer': footballer, 'teams': teams}
     return render(request, 'FootballManager/edit_footballer.html', context)
+
 
 
 def Delete_Footballer(request, footballer_id):

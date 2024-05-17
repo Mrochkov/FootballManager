@@ -1,7 +1,7 @@
 from django.views import generic
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
-from FootballManager.models import Match, Queue, Statistic
+from FootballManager.models import Match, Team
 from FootballManager.forms import MatchForm, MatchResultForm
 
 class MatchesView(generic.ListView):
@@ -42,6 +42,27 @@ def Add_Match_Result(request, match_id):
 
     context = {'match': match, 'matchresult_form': matchresult_form}
     return render(request, 'FootballManager/add_match_result.html', context)
+
+def Info_Match(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    context = {'match': match}
+    return render(request, 'FootballManager/info_match.html', context)
+
+def Edit_Match(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+
+    if request.method == 'POST':
+        form = MatchForm(request.POST, instance=match)
+        if form.is_valid():
+            form.save()
+            return redirect('Matches')
+    else:
+        form = MatchForm(instance=match)
+
+    teams = Team.objects.all()
+
+    context = {'form': form, 'match': match, 'teams': teams}
+    return render(request, 'FootballManager/edit_match.html', context)
 
 
 def Delete_Match(match_id):

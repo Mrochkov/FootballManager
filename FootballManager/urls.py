@@ -3,7 +3,7 @@ from django.contrib import admin
 from .views.table import TableView
 from .views.teams import TeamsView, Add_Team, Info_Team, Edit_Team, Delete_Team
 from .views.footballers import FootballersView, Add_Footballer, Info_Footballer, Edit_Footballer, Delete_Footballer
-from .views.matches import  MatchesView, Add_Match, Add_Match_Result, Delete_Match
+from .views.matches import  MatchesView, Add_Match, Add_Match_Result, Info_Match, Edit_Match, Delete_Match
 from .views.queues import QueueView, Add_to_queue
 from .views.statistics import StatisticView
 from .views.auth import custom_login, custom_logout
@@ -24,6 +24,8 @@ urlpatterns = [
     path('footballers/delete/<int:footballer_id>/', Delete_Footballer, name='Delete footballer'),
     path('matches/', MatchesView.as_view(), name='Matches'),
     path('matches/add/', Add_Match, name='Add Match'),
+    path('matches/info/<int:match_id>/', Info_Match, name='Info match'),
+    path('matches/edit/<int:match_id>/', Edit_Match, name='Edit match'),
     path('matches/result/<int:match_id>/', Add_Match_Result, name='Add match result'),
     path('matches/delete/<int:match_id>/', Delete_Match, name='Delete match'),
     path('queue/', QueueView.as_view(), name='Queue'),
