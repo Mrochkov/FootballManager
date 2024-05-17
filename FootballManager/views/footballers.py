@@ -4,7 +4,7 @@ from FootballManager.models import Footballer, Statistic, Team
 from FootballManager.forms import FootballerForm
 
 class FootballersView(generic.ListView):
-    template_name = "FootballManager/footballers.html"
+    template_name = "FootballManager/footballers/footballers.html"
     context_object_name = "footballers"
 
     def get_queryset(self):
@@ -19,14 +19,14 @@ def Add_Footballer(request):
             Statistic.objects.create(footballer=footballer)
             return redirect('Footballers')
 
-    template_name = "FootballManager/add_footballer.html"
+    template_name = "FootballManager/footballers/add_footballer.html"
     context = {'form': form}
     return render(request, template_name, context)
 
 def Info_Footballer(request, footballer_id):
     footballer = get_object_or_404(Footballer, pk=footballer_id)
     context = {'footballer': footballer}
-    return render(request, 'FootballManager/info_footballer.html', context)
+    return render(request, 'FootballManager/footballers/info_footballer.html', context)
 
 def Edit_Footballer(request, footballer_id):
     footballer = get_object_or_404(Footballer, pk=footballer_id)
@@ -42,7 +42,7 @@ def Edit_Footballer(request, footballer_id):
     teams = Team.objects.all()
 
     context = {'form': form, 'footballer': footballer, 'teams': teams}
-    return render(request, 'FootballManager/edit_footballer.html', context)
+    return render(request, 'FootballManager/footballers/edit_footballer.html', context)
 
 
 

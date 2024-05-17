@@ -4,7 +4,7 @@ from FootballManager.models import Team, Footballer
 from FootballManager.forms import TeamForm
 
 class TeamsView(generic.ListView):
-    template_name = "FootballManager/teams.html"
+    template_name = "FootballManager/teams/teams.html"
     context_object_name = "teams"
 
     def get_queryset(self):
@@ -21,14 +21,14 @@ def Add_Team(request):
         form = TeamForm()
 
     context = {'form': form}
-    return render(request, 'FootballManager/add_team.html', context)
+    return render(request, 'FootballManager/teams/add_team.html', context)
 
 
 def Info_Team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     footballers = Footballer.objects.filter(team=team)
     context = {'team': team, 'footballers': footballers}
-    return render(request, 'FootballManager/info_team.html', context)
+    return render(request, 'FootballManager/teams/info_team.html', context)
 
 
 def Edit_Team(request, team_id):
@@ -43,7 +43,7 @@ def Edit_Team(request, team_id):
         form = TeamForm(instance=team)
 
     context = {'team': team}
-    return render(request, 'FootballManager/edit_team.html', context)
+    return render(request, 'FootballManager/teams/edit_team.html', context)
 
 
 def Delete_Team(request, team_id):

@@ -6,7 +6,7 @@ from FootballManager.models import Match, Team, Footballer, Event
 from FootballManager.forms import MatchForm, MatchResultForm, EventForm
 
 class MatchesView(generic.ListView):
-    template_name = "FootballManager/matches.html"
+    template_name = "FootballManager/matches/matches.html"
     context_object_name = "matches"
 
     def get_queryset(self):
@@ -22,7 +22,7 @@ def Add_Match(request):
         match_form = MatchForm()
 
     context = {'match_form': match_form}
-    return render(request, 'FootballManager/add_match.html', context)
+    return render(request, 'FootballManager/matches/add_match.html', context)
 
 def Add_Match_Result(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
@@ -59,12 +59,12 @@ def Add_Match_Result(request, match_id):
         'formset': formset,
         'footballers': footballers,  # Dodaj piłkarzy do kontekstu
     }
-    return render(request, 'FootballManager/add_match_result.html', context)
+    return render(request, 'FootballManager/matches/add_match_result.html', context)
 
 def Info_Match(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
     context = {'match': match}
-    return render(request, 'FootballManager/info_match.html', context)
+    return render(request, 'FootballManager/matches/info_match.html', context)
 
 def Edit_Match(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
@@ -80,7 +80,7 @@ def Edit_Match(request, match_id):
     teams = Team.objects.all()
 
     context = {'form': form, 'match': match, 'teams': teams}
-    return render(request, 'FootballManager/edit_match.html', context)
+    return render(request, 'FootballManager/matches/edit_match.html', context)
 
 
 def Delete_Match(match_id):
