@@ -1,9 +1,6 @@
 from django.forms import ModelForm
-from .models import Footballer
-from .models import Team
-from .models import Match
 from django import forms
-from .models import Queue
+from .models import Footballer, Team, Match, Queue, Event
 
 
 class FootballerForm(ModelForm):
@@ -39,6 +36,11 @@ class MatchResultForm(ModelForm):
     class Meta:
         model = Match
         fields = ['host_goals', 'guest_goals']
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['minute', 'event_type', 'footballer']
 
 class QueueForm(ModelForm):
     class Meta:

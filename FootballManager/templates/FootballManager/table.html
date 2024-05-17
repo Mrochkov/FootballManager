@@ -2,19 +2,19 @@
 
 {% block content %}
 <div class="container has-text-centered">
-    <table class="table is-fullwidth">
+    <table class="table is-fullwidth sortable">
         <thead>
             <tr>
-                <th>Pozycja</th>
-                <th>Nazwa</th>
-                <th>Ilość meczy</th>
-                <th>Wygrane</th>
-                <th>Remisy</th>
-                <th>Przegrane</th>
-                <th>Gole strzelone</th>
-                <th>Gole stracone</th>
-                <th>Różnica goli</th>
-                <th>Punkty</th>
+                <th class="sortable-header">Pozycja <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Nazwa <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Ilość meczy <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Wygrane <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Remisy <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Przegrane <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Gole strzelone <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Gole stracone <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Różnica goli <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Punkty <i class="fas fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +22,7 @@
             <tr>
                 <th>{{ forloop.counter }}</th>
                 <td>{{ team.name }}</td>
-                <td>{{ team.matches_played }}</td>
+                <td>{{ team.matches_count }}</td>
                 <td>{{ team.wins }}</td>
                 <td>{{ team.draws }}</td>
                 <td>{{ team.losses }}</td>
@@ -35,4 +35,20 @@
         </tbody>
     </table>
 </div>
+
+<!-- Include sorttable.js for sortable tables -->
+<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+<style>
+    .sortable-header {
+        cursor: pointer;
+        user-select: none;
+    }
+    .sortable-header:hover {
+        cursor: pointer;
+        color: #3273dc; /* Primary color for better visibility */
+    }
+    .sortable-header .fa-sort {
+        margin-left: 5px;
+    }
+</style>
 {% endblock %}

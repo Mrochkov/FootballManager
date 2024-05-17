@@ -8,11 +8,10 @@
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
-
                     <div class="field">
                         <label class="label">Data meczu</label>
-                        <div class="field">
-                                {{ match.date }}
+                        <div class="control">
+                            {{ match.date }}
                         </div>
                     </div>
                     <div class="columns is-multiline is-mobile">
@@ -22,7 +21,6 @@
                                  {{ match.host_team }}
                             </div>
                         </div>
-
                         <div class="column is-half">
                             <label class="label">Goście</label>
                             <div class="control">
@@ -57,9 +55,10 @@
                         </div>
                     </div>
                     
-
                     <div id="events_section">
+                        {{ formset.management_form }}
                     </div>
+                    
                     <div class="field">
                         <div class="control has-text-centered">
                             <button id="add_event_button" class="button is-link" type="button">Dodaj wydarzenie</button>
@@ -72,21 +71,17 @@
                             <a class="button is-light" href="{% url 'Matches' %}">Anuluj</a>
                         </div>
                     </div>
-
-                    
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const eventsSection = document.getElementById('events_section');
         const addEventButton = document.getElementById('add_event_button');
-
-        let eventIndex = 0;
+        let eventIndex = {{ formset.total_form_count }};
 
         addEventButton.addEventListener('click', function () {
             const eventFormHTML = `
@@ -97,14 +92,14 @@
                     <div class="column is-one-quarter">
                         <label class="label">Minuta</label>
                         <div class="control">
-                                <input class="input" type="number" name="minute" placeholder="Wpisz minutę">
+                            <input class="input" type="number" name="form-${eventIndex}-minute" placeholder="Wpisz minutę">
                         </div>
                     </div>
                     <div class="column is-half">
                         <label class="label">Piłkarz</label>
                         <div class="control">
                             <div class="select">
-                                <select name="footballer">
+                                <select name="form-${eventIndex}-footballer">
                                     {% for footballer in footballers %}
                                         <option value="{{ footballer.id }}">{{ footballer.name }} {{ footballer.surname }}</option>
                                     {% endfor %}
@@ -116,17 +111,23 @@
                         <label class="label">Rodzaj</label>
                         <div class="control">
                             <div class="select">
-                                    {{ event_form.event_type }}
+                                <select name="form-${eventIndex}-event_type">
+                                    <option value="GOAL">Gol</option>
+                                    <option value="ASSIST">Asysta</option>
+                                    <option value="YELLOW CARD">Żółta Kartka</option>
+                                    <option value="RED CARD">Czerwona Kartka</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                </div
+                </div>
+                <input type="hidden" name="form-${eventIndex}-match" value="{{ match.id }}">
             `;
             const eventFormElement = document.createElement('div');
             eventFormElement.innerHTML = eventFormHTML;
             eventsSection.appendChild(eventFormElement);
-
             eventIndex++;
+            document.getElementById('id_form-TOTAL_FORMS').value = eventIndex; // Update the total forms count
         });
     });
 </script>

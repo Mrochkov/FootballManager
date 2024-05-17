@@ -61,10 +61,10 @@ class Event(models.Model):
             self.update_match_score()
 
     class EventType(models.TextChoices):
-        GOAL = 'GOAL', 'Goal'
-        ASSIST = 'ASSIST', 'Assist'
-        YELLOW_CARD = 'YELLOW CARD', 'Yellow card'
-        RED_CARD = 'RED CARD', 'Red card'
+        GOAL = 'GOAL', 'Gol'
+        ASSIST = 'ASSIST', 'Asysta'
+        YELLOW_CARD = 'YELLOW CARD', 'Żółta kartka'
+        RED_CARD = 'RED CARD', 'Czerwona kartka'
 
     event_type = models.CharField(max_length=20, choices=EventType.choices, default=EventType.GOAL)
 

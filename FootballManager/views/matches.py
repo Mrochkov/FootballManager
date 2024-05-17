@@ -1,8 +1,9 @@
 from django.views import generic
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
-from FootballManager.models import Match, Team
-from FootballManager.forms import MatchForm, MatchResultForm
+from django.forms import modelformset_factory
+from FootballManager.models import Match, Team, Footballer, Event
+from FootballManager.forms import MatchForm, MatchResultForm, EventForm
 
 class MatchesView(generic.ListView):
     template_name = "FootballManager/matches.html"
@@ -25,22 +26,39 @@ def Add_Match(request):
 
 def Add_Match_Result(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
-    
+    EventFormSet = modelformset_factory(Event, form=EventForm, extra=0)
+
+    host_players = Footballer.objects.filter(team=match.host_team)
+    guest_players = Footballer.objects.filter(team=match.guest_team)
+    footballers = host_players.union(guest_players)
+
     if request.method == 'POST':
         matchresult_form = MatchResultForm(request.POST, instance=match)
-        if matchresult_form.is_valid():
-            matchresult = matchresult_form.save()
-            update_team_stats_for_match(
-                match.host_team,
-                match.guest_team,
-                matchresult.host_goals,
-                matchresult.guest_goals
-            )
+        formset = EventFormSet(request.POST, queryset=Event.objects.filter(match=match))
+
+        if matchresult_form.is_valid() and formset.is_valid():
+            matchresult = matchresult_form.save(commit=False)
+            matchresult.host_goals = matchresult_form.cleaned_data['host_goals']
+            matchresult.guest_goals = matchresult_form.cleaned_data['guest_goals']
+            matchresult.save()
+            
+            events = formset.save(commit=False)
+            for event in events:
+                event.match = match
+                event.save()
             return redirect('Matches')
     else:
         matchresult_form = MatchResultForm(instance=match)
+        formset = EventFormSet(queryset=Event.objects.filter(match=match))
 
-    context = {'match': match, 'matchresult_form': matchresult_form}
+        
+
+    context = {
+        'match': match,
+        'matchresult_form': matchresult_form,
+        'formset': formset,
+        'footballers': footballers,  # Dodaj piłkarzy do kontekstu
+    }
     return render(request, 'FootballManager/add_match_result.html', context)
 
 def Info_Match(request, match_id):

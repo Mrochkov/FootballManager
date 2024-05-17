@@ -1,6 +1,6 @@
 from django.views import generic
-from django.db.models import F, Q
-from django.db import models, transaction
+from django.db.models import F, Q, Count
+from django.db import models
 from FootballManager.models import Team
 
 class TableView(generic.ListView):
@@ -9,11 +9,10 @@ class TableView(generic.ListView):
 
     def get_queryset(self):
         teams = Team.objects.annotate(
-            host_matches_count=models.Count('host_team', filter=Q(host_team__isnull=False)),
-            guest_matches_count=models.Count('guest_team', filter=Q(guest_team__isnull=False)),
-        )
-        for team in teams:
-            team.matches_count = team.host_matches_count + team.guest_matches_count
-            team.points = team.wins * 3 + team.draws
-            team.goals_balance = team.goals_scored - team.goals_lost
+            host_matches_count=Count('host_team', filter=Q(host_team__isnull=False)),
+            guest_matches_count=Count('guest_team', filter=Q(guest_team__isnull=False)),
+            matches_count=F('host_matches_count') + F('guest_matches_count'),
+            points=F('wins') * 3 + F('draws'),
+            goals_balance=F('goals_scored') - F('goals_lost')
+        ).order_by('-points')  # Sort by points in descending order
         return teams
