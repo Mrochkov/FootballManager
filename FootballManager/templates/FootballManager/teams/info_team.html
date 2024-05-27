@@ -31,14 +31,22 @@
                 <div class="field">
                     <label class="label">Imię i nazwisko trenera</label>
                     <div class="control">
-                        {{ team.trainer }}
+                        {% if team.trainer %}
+                            {{ team.trainer }}
+                        {% else %}
+                            Brak obecnie trenera
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="field">
                     <label class="label">Opis</label>
                     <div class="control">
-                        {{ team.description }}
+                        {% if team.description %}
+                            {{ team.description }}
+                        {% else %}
+                            Nie ma jeszcze opisu
+                        {% endif %}
                     </div>
                 </div>
 

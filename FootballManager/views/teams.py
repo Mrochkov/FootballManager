@@ -13,7 +13,7 @@ class TeamsView(generic.ListView):
 
 def Add_Team(request):
     if request.method == 'POST':
-        form = TeamForm(request.POST)
+        form = TeamForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('Teams')
