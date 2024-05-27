@@ -1,1 +1,3 @@
 FootballManager/settings.py
+.env
+media/

@@ -35,14 +35,14 @@ def Edit_Team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
 
     if request.method == 'POST':
-        form = TeamForm(request.POST, instance=team)
+        form = TeamForm(request.POST, request.FILES, instance=team)
         if form.is_valid():
             form.save()
             return redirect('Teams')
     else:
         form = TeamForm(instance=team)
 
-    context = {'team': team}
+    context = {'form': form, 'team': team}
     return render(request, 'FootballManager/teams/edit_team.html', context)
 
 

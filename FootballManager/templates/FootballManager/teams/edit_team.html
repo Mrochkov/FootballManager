@@ -6,28 +6,36 @@
         <div class="column is-half">
             <h1 class="title has-text-centered">Edytuj drużynę</h1>
             <div class="box">
-                <form method="post" class="form">
+                <form method="post" enctype="multipart/form-data" class="form">
                     {% csrf_token %}
                     <div class="field">
                         <label class="label">Nazwa drużyny</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" 
-                                    {% if team.name is null or team.name == '' %}   
-                                        placeholder="Wprowadź nazwę drużyny" 
-                                    {% else %} 
-                                        value="{{ team.name }}"
-                                    {% endif %}>
+                            <input class="input" type="text" name="name" value="{{ form.name.value|default:team.name }}" placeholder="Wprowadź nazwę drużyny">
                         </div>
                     </div>
+
                     <div class="field">
                         <label class="label">Imię i nazwisko trenera</label>
                         <div class="control">
-                            <input class="input" type="text" name="trainer" 
-                                    {% if team.trainer is None or team.trainer == '' %}   
-                                        placeholder="Wprowadź imię i nazwisko trenera" 
-                                    {% else %} 
-                                        value="{{ team.trainer }}"
-                                    {% endif %}>
+                            <input class="input" type="text" name="trainer" value="{{ form.trainer.value|default:team.trainer }}" placeholder="Wprowadź imię i nazwisko trenera">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Logo</label>
+                        <div class="control">
+                            {% if team.logo %}
+                                <img src="{{ team.logo.url }}" alt="{{ team.name }} logo" style="max-height: 200px;">
+                            {% endif %}
+                            <input class="input" type="file" name="logo">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Opis</label>
+                        <div class="control">
+                            <textarea class="textarea" name="description" placeholder="Wprowadź opis drużyny">{{ form.description.value|default:team.description }}</textarea>
                         </div>
                     </div>
 

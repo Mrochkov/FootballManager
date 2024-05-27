@@ -10,6 +10,8 @@ class Team(models.Model):
     losses = models.IntegerField(default=0)
     goals_scored = models.IntegerField(default=0)
     goals_lost = models.IntegerField(default=0)
+    logo = models.ImageField(upload_to='team_logos/', blank=True, null=True)
+    description = models.TextField(blank=True)
 
     def matches_played(self):
         return Match.objects.filter(models.Q(host_team=self) | models.Q(guest_team=self)).count()

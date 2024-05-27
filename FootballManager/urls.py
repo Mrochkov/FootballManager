@@ -7,6 +7,8 @@ from .views.matches import  MatchesView, Add_Match, Add_Match_Result, Info_Match
 from .views.queues import QueueView, Add_to_queue
 from .views.statistics import StatisticView
 from .views.auth import custom_login, custom_logout
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -34,3 +36,6 @@ urlpatterns = [
     path('login/', custom_login, name='Login'),
     path('logout/', custom_logout, name='Logout'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
