@@ -24,7 +24,8 @@ def Add_Queue(request):
 
 def Info_Queue(request, queue_id):
     queue = get_object_or_404(Queue, pk=queue_id)
-    context = {'queue': queue}
+    matches = queue.matches.all()
+    context = {'queue': queue, 'matches': matches}
     return render(request, 'FootballManager/queues/info_queue.html', context)
 
 

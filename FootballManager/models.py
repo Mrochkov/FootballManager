@@ -74,6 +74,13 @@ class Event(models.Model):
         return f"{self.event_type} {self.minute}"
 
 
+class Queue(models.Model):
+    id = models.AutoField(primary_key=True)
+    number = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"Kolejka {self.number}"
+
 class Match(models.Model):
     id = models.AutoField(primary_key=True)
     host_team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='host_team', null=True)
@@ -81,19 +88,10 @@ class Match(models.Model):
     date = models.DateTimeField(null=True)
     host_goals = models.IntegerField(null=True)
     guest_goals = models.IntegerField(null=True)
+    queue = models.ForeignKey(Queue, on_delete=models.CASCADE, related_name='matches', null=True)
 
     def __str__(self):
         return f"{self.host_team} {self.host_goals} - {self.guest_goals} {self.guest_team}"
-
-
-class Queue(models.Model):
-    id = models.AutoField(primary_key=True)
-    number = models.IntegerField(default=0)
-    matches = models.ManyToManyField('Match')
-
-    def __str__(self):
-        return f"Kolejka {self.number}"
-
 
 
 class Statistic(models.Model):

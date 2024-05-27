@@ -24,7 +24,7 @@ class EventForm(ModelForm):
 class MatchForm(ModelForm):
     class Meta:
         model = Match
-        fields = ['date', 'host_team', 'guest_team']
+        fields = ['date', 'host_team', 'guest_team', 'queue']
 
     def clean(self):
         cleaned_data = super().clean()

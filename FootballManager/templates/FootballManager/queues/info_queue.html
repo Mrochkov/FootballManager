@@ -15,16 +15,34 @@
                 <div class="field">
                     <label class="label">Liczba meczów</label>
                     <div class="control">
-                        {{ queue.matches.count }}
+                        {{ matches.count }}
                     </div>
                 </div>
                 <div class="field">
                     <label class="label">Mecze</label>
                     <div class="control">
-                        {{ queue.matches }}
+                        <table class="table is-bordered is-fullwidth">
+                            <thead>
+                                <tr>
+                                    <th>Gospodarz</th>
+                                    <th>Gość</th>
+                                    <th>Wynik</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for match in matches %}
+                                <tr>
+                                    <td>{{ match.host_team.name }}</td>
+                                    <td>{{ match.guest_team.name }}</td>
+                                    <td>{{ match.host_goals }} - {{ match.guest_goals }}</td>
+                                    <td>{{ match.date }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
                 <div class="field">
                     <div class="control has-text-centered">
                         <a class="button is-light" href="{% url 'Queues' %}">Wróć</a>

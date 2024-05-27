@@ -1,8 +1,9 @@
 from django.views import generic
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
 from django.forms import modelformset_factory
-from FootballManager.models import Match, Team, Footballer, Event
+from FootballManager.models import Match, Team, Footballer, Event, Queue
 from FootballManager.forms import MatchForm, MatchResultForm, EventForm
 
 class MatchesView(generic.ListView):
@@ -11,6 +12,11 @@ class MatchesView(generic.ListView):
 
     def get_queryset(self):
         return Match.objects.order_by("-host_team")
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
 
 def Add_Match(request):
     if request.method == 'POST':
@@ -51,13 +57,11 @@ def Add_Match_Result(request, match_id):
         matchresult_form = MatchResultForm(instance=match)
         formset = EventFormSet(queryset=Event.objects.filter(match=match))
 
-        
-
     context = {
         'match': match,
         'matchresult_form': matchresult_form,
         'formset': formset,
-        'footballers': footballers,  # Dodaj piłkarzy do kontekstu
+        'footballers': footballers, 
     }
     return render(request, 'FootballManager/matches/add_match_result.html', context)
 
@@ -78,12 +82,13 @@ def Edit_Match(request, match_id):
         form = MatchForm(instance=match)
 
     teams = Team.objects.all()
+    queues = Queue.objects.all()
 
-    context = {'form': form, 'match': match, 'teams': teams}
+    context = {'form': form, 'match': match, 'teams': teams, 'queues': queues}
     return render(request, 'FootballManager/matches/edit_match.html', context)
 
 
-def Delete_Match(match_id):
+def Delete_Match(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
     match.delete()
     return redirect('Matches')
