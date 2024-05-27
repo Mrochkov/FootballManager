@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <h1 class="title has-text-centered">Dodaj nową kolejkę</h1>
+            <div class="box">
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label">Numer kolejki</label>
+                        <div class="control">
+                            <input class="input" type="number" name="number" value="{{ form.number.value }}" placeholder="Wprowadź numer kolejki">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Mecze</label>
+                        <div class="control">
+                            {{ form.matches }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control has-text-centered">
+                            <button class="button is-primary" type="submit">Zapisz</button>
+                            <a class="button is-light" href="{% url 'Queues' %}">Anuluj</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

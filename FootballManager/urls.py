@@ -4,7 +4,7 @@ from .views.table import TableView
 from .views.teams import TeamsView, Add_Team, Info_Team, Edit_Team, Delete_Team
 from .views.footballers import FootballersView, Add_Footballer, Info_Footballer, Edit_Footballer, Delete_Footballer
 from .views.matches import  MatchesView, Add_Match, Add_Match_Result, Info_Match, Edit_Match, Delete_Match
-from .views.queues import QueueView, Add_to_queue
+from .views.queues import QueueView, Add_Queue, Info_Queue, Edit_Queue, Delete_Queue
 from .views.statistics import StatisticView
 from .views.auth import custom_login, custom_logout
 from django.conf import settings
@@ -30,8 +30,11 @@ urlpatterns = [
     path('matches/edit/<int:match_id>/', Edit_Match, name='Edit match'),
     path('matches/result/<int:match_id>/', Add_Match_Result, name='Add match result'),
     path('matches/delete/<int:match_id>/', Delete_Match, name='Delete match'),
-    path('queue/', QueueView.as_view(), name='Queue'),
-    path('queue/add/<int:queue_id>/', Add_to_queue, name='Add to queue'),
+    path('queues/', QueueView.as_view(), name='Queues'),
+    path('queues/add/', Add_Queue, name='Add queue'),
+    path('queues/info/<int:queue_id>/', Info_Queue, name='Info queue'),
+    path('queues/edit/<int:queue_id>/', Edit_Queue, name='Edit queue'),
+    path('queues/delete/<int:queue_id>/', Delete_Queue, name='Delete queue'),
     path('statistics/', StatisticView.as_view(), name='Statistics'),
     path('login/', custom_login, name='Login'),
     path('logout/', custom_logout, name='Logout'),

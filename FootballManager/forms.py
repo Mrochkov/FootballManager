@@ -48,6 +48,8 @@ class EventForm(forms.ModelForm):
 
 
 class QueueForm(ModelForm):
+    matches = forms.ModelMultipleChoiceField(queryset=Match.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
+
     class Meta:
         model = Queue
-        fields = '__all__'
+        fields = ['number', 'matches']

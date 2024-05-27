@@ -88,10 +88,12 @@ class Match(models.Model):
 
 class Queue(models.Model):
     id = models.AutoField(primary_key=True)
+    number = models.IntegerField(default=0)
     matches = models.ManyToManyField('Match')
 
     def __str__(self):
-        return f"{self.matches}"
+        return f"Kolejka {self.number}"
+
 
 
 class Statistic(models.Model):

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container has-text-centered">
+    <h1 class="title">Kolejka meczy</h1>
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Numer kolejki</th>
+                <th>Ilość meczów</th>
+                <th>Edycja</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for queue in queues %}
+            <tr>
+                <td>Kolejka {{ queue.number }}</td>
+                <td>{{ queue.matches.count }}</td>
+                <td>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'Info queue' queue.id %}" class="button is-small is-info">
+                        <span class="icon">
+                            <i class="fas fa-info"></i>
+                        </span>
+                        <span>Info</span>
+                    </a>
+                    <a href="{% url 'Edit queue' queue.id %}" class="button is-small">
+                        <span class="icon">
+                            <i class="fas fa-edit"></i>
+                        </span>
+                        <span>Edytuj</span>
+                    </a>
+                    <a href="{% url 'Delete queue' queue.id %}" class="button is-small is-danger">
+                        <span class="icon">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                        <span>Usuń</span>
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if user.is_authenticated %}
+    <a href="{% url 'Add queue' %}" class="button is-rounded">Dodaj kolejkę</a>
+    {% endif %}
+</div>
+{% endblock %}

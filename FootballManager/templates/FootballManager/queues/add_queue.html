@@ -4,36 +4,26 @@
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-half">
-            <h1 class="title has-text-centered">Dodaj zawodnika</h1>
+            <h1 class="title has-text-centered">Dodaj nową kolejkę</h1>
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
                     <div class="field">
-                        <label class="label">Imie</label>
+                        <label class="label">Numer kolejki</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" placeholder="Wprowadź imie gracza">
+                            <input class="input" type="number" name="number" value="{{ form.number.value }}" placeholder="Wprowadź numer kolejki">
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label">Nazwisko</label>
+                        <label class="label">Mecze</label>
                         <div class="control">
-                            <input class="input" type="text" name="surname" placeholder="Wprowadź nazwisko">
+                            {{ form.matches }}
                         </div>
                     </div>
-                    <div class="field">
-                        <label class="label">Wybierz drużynę w której gra zawodnik</label>
-                        <div class="control">
-                            <div class="select">
-                                {{form.team}}
-                            </div>
-                        </div>
-                    </div>
-
-
                     <div class="field">
                         <div class="control has-text-centered">
                             <button class="button is-primary" type="submit">Dodaj</button>
-                            <a class="button is-light" href="{% url 'Footballers' %}">Anuluj</a>
+                            <a class="button is-light" href="{% url 'Queues' %}">Anuluj</a>
                         </div>
                     </div>
                 </form>
