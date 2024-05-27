@@ -1,22 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .box {
+        position: relative;
+    }
+    .logo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        max-height: 100px;
+        max-width: 100px;
+    }
+</style>
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-half">
             <h1 class="title has-text-centered">Informacje o drużynie</h1>
             <div class="box">
+                {% if team.logo %}
+                    <img src="{{ team.logo.url }}" alt="{{ team.name }} logo" class="logo">
+                {% endif %}
                 <div class="field">
                     <label class="label">Nazwa drużyny</label>
                     <div class="control">
                         {{ team.name }}
                     </div>
                 </div>
-                
+
                 <div class="field">
                     <label class="label">Imię i nazwisko trenera</label>
                     <div class="control">
                         {{ team.trainer }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Opis</label>
+                    <div class="control">
+                        {{ team.description }}
                     </div>
                 </div>
 
