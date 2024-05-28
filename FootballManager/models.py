@@ -45,8 +45,8 @@ class Event(models.Model):
             Statistic.objects.filter(footballer=self.footballer).update(yellow_cards=models.F('yellow_cards') + 1)
         elif self.event_type == self.EventType.RED_CARD:
             Statistic.objects.filter(footballer=self.footballer).update(red_cards=models.F('red_cards') + 1)
-
-        Statistic.objects.filter(footballer=self.footballer).update(matches_played=models.F('matches_played') + 1)
+        elif self.event_type == self.EventType.OWN_GOAL:
+            Statistic.objects.filter(footballer=self.footballer).update(own_goals=models.F('own_goals') + 1)
 
     def update_match_score(self):
         if self.event_type == self.EventType.GOAL:
@@ -54,7 +54,12 @@ class Event(models.Model):
                 self.match.host_goals += 1
             elif self.match.guest_team == self.footballer.team:
                 self.match.guest_goals += 1
-            self.match.save()
+        elif self.event_type == self.EventType.OWN_GOAL:
+            if self.match.host_team == self.footballer.team:
+                self.match.guest_goals += 1
+            elif self.match.guest_team == self.footballer.team:
+                self.match.host_goals += 1
+        self.match.save()
 
     def save(self, *args, **kwargs):
         with transaction.atomic():
@@ -67,6 +72,7 @@ class Event(models.Model):
         ASSIST = 'ASSIST', 'Asysta'
         YELLOW_CARD = 'YELLOW CARD', 'Żółta kartka'
         RED_CARD = 'RED CARD', 'Czerwona kartka'
+        OWN_GOAL = 'OWN GOAL', 'Gol samobójczy'
 
     event_type = models.CharField(max_length=20, choices=EventType.choices, default=EventType.GOAL)
 
@@ -102,6 +108,7 @@ class Statistic(models.Model):
     assists = models.IntegerField(default=0)
     yellow_cards = models.IntegerField(default=0)
     red_cards = models.IntegerField(default=0)
+    own_goals = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.footballer.name}"

@@ -13,6 +13,7 @@
                 <th class="sortable-header">Asysty <i class="fas fa-sort"></i></th>
                 <th class="sortable-header">Żółte kartki <i class="fas fa-sort"></i></th>
                 <th class="sortable-header">Czerwone kartki <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Gole samobójcze <i class="fas fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,7 @@
                 <td>{{ statistic.assists }}</td>
                 <td>{{ statistic.yellow_cards }}</td>
                 <td>{{ statistic.red_cards }}</td>
+                <td>{{ statistic.own_goals }}</td>
             </tr>
             {% endfor %}
         </tbody>

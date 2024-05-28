@@ -31,9 +31,10 @@ def Add_Match(request):
     context = {'match_form': match_form}
     return render(request, 'FootballManager/matches/add_match.html', context)
 
+
 def Add_Match_Result(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
-    EventFormSet = modelformset_factory(Event, form=EventForm, extra=0)
+    EventFormSet = modelformset_factory(Event, form=EventForm, extra=0, can_delete=True)
 
     host_players = Footballer.objects.filter(team=match.host_team)
     guest_players = Footballer.objects.filter(team=match.guest_team)
@@ -48,12 +49,15 @@ def Add_Match_Result(request, match_id):
             matchresult.host_goals = matchresult_form.cleaned_data['host_goals']
             matchresult.guest_goals = matchresult_form.cleaned_data['guest_goals']
             matchresult.save()
-            
+
             events = formset.save(commit=False)
             for event in events:
                 event.match = match
                 event.save()
             return redirect('Matches')
+        else:
+            print("MatchResultForm errors:", matchresult_form.errors)
+            print("Formset errors:", formset.errors)
     else:
         matchresult_form = MatchResultForm(instance=match)
         formset = EventFormSet(queryset=Event.objects.filter(match=match))
@@ -62,9 +66,11 @@ def Add_Match_Result(request, match_id):
         'match': match,
         'matchresult_form': matchresult_form,
         'formset': formset,
-        'footballers': footballers, 
+        'footballers': footballers,
     }
     return render(request, 'FootballManager/matches/add_match_result.html', context)
+
+
 
 def Info_Match(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
