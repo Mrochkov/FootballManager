@@ -10,17 +10,17 @@ class QueueView(generic.ListView):
     def get_queryset(self):
         return Queue.objects.order_by("id")
 
+
 def Add_Queue(request):
     if request.method == 'POST':
         form = QueueForm(request.POST)
         if form.is_valid():
-            queue = form.save(commit=False)
-            queue.save()
-            form.save_m2m()  
+            form.save()
             return redirect('Queues')
     else:
         form = QueueForm()
     return render(request, 'FootballManager/queues/add_queue.html', {'form': form})
+
 
 def Info_Queue(request, queue_id):
     queue = get_object_or_404(Queue, pk=queue_id)

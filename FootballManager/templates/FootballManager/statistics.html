@@ -2,24 +2,23 @@
 
 {% block content %}
 <div class="container has-text-centered">
-    <h1 class="title">Ranking zawodników</h1>
-    <table class="table is-fullwidth">
+    <table class="table is-fullwidth sortable">
         <thead>
             <tr>
-                <th>Pozycja</th>
-                <th>Imię</th>
-                <th>Nazwisko</th>
-                <th>Drużyna</th>
-                <th>Gole</th>
-                <th>Asysty</th>
-                <th>Żółte kartki</th>
-                <th>Czerwone kartki</th>
+                <th class="sortable-header">Pozycja <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Imię <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Nazwisko <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Drużyna <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Gole <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Asysty <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Żółte kartki <i class="fas fa-sort"></i></th>
+                <th class="sortable-header">Czerwone kartki <i class="fas fa-sort"></i></th>
             </tr>
         </thead>
         <tbody>
             {% for statistic in statistics %}
             <tr>
-                <td>{{ forloop.counter }}</td>
+                <th>{{ forloop.counter }}</th>
                 <td>{{ statistic.footballer.name }}</td>
                 <td>{{ statistic.footballer.surname }}</td>
                 <td>{{ statistic.footballer.team.name }}</td>
@@ -32,4 +31,22 @@
         </tbody>
     </table>
 </div>
+
+<!-- Include sorttable.js for sortable tables -->
+<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+<style>
+    .sortable-header {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .sortable-header:hover {
+        cursor: pointer;
+        color: #3273dc; /* Primary color for better visibility */
+    }
+
+    .sortable-header .fa-sort {
+        margin-left: 5px;
+    }
+</style>
 {% endblock %}

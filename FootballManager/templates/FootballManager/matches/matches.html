@@ -2,12 +2,16 @@
 
 {% block content %}
 <div class="container has-text-centered">
-    <table class="table is-fullwidth">
+    <table class="table is-fullwidth sortable">
         <thead>
             <tr>
                 <th>Pozycja</th>
-                <th>Data</th>
-                <th>Kolejka</th>
+                <th class="sortable-header">
+                    Data <i class="fas fa-sort"></i>
+                </th>
+                <th class="sortable-header">
+                    Kolejka <i class="fas fa-sort"></i>
+                </th>
                 <th>Gospodarz</th>
                 <th>Gość</th>
                 <th>Wynik</th>
@@ -84,4 +88,22 @@
     <a href="/matches/add" class="button is-rounded">Dodaj mecz</a>
     {% endif %}
 </div>
+<!-- Include sorttable.js for sortable tables -->
+<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+<style>
+    .sortable-header {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .sortable-header:hover {
+        cursor: pointer;
+        color: #3273dc;
+        /* Primary color for better visibility */
+    }
+
+    .sortable-header .fa-sort {
+        margin-left: 5px;
+    }
+</style>
 {% endblock %}

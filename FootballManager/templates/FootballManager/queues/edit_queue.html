@@ -4,7 +4,7 @@
 <div class="container">
     <div class="columns is-centered">
         <div class="column is-half">
-            <h1 class="title has-text-centered">Dodaj nową kolejkę</h1>
+            <h1 class="title has-text-centered">Edytuj kolejkę</h1>
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
@@ -12,12 +12,6 @@
                         <label class="label">Numer kolejki</label>
                         <div class="control">
                             <input class="input" type="number" name="number" value="{{ form.number.value }}" placeholder="Wprowadź numer kolejki">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Mecze</label>
-                        <div class="control">
-                            {{ form.matches }}
                         </div>
                     </div>
                     <div class="field">
