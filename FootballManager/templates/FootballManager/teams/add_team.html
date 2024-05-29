@@ -8,7 +8,7 @@
             <div class="box">
                 <form method="post" enctype="multipart/form-data" class="form">
                     {% csrf_token %}
-                    {% if TeamForm.non_field_errors %}
+                    {% if form.non_field_errors %}
                         <div class="notification is-danger">
                             {{ form.non_field_errors }}
                         </div>
@@ -20,7 +20,7 @@
                             {{ form.name }}
                         </div>
                         {% if form.name.errors %}
-                            <p class="help custom-error">{{ form.name.errors }}</p>
+                            <p class="help custom-error">Podana nazwa drużyny już istnieje.</p>
                         {% endif %}
                     </div>
 
@@ -30,7 +30,7 @@
                             {{ form.trainer }}
                         </div>
                         {% if form.trainer.errors %}
-                            <p class="help custom-error">{{ form.trainer.errors }}</p>
+                            <p class="help custom-error">Pole trenera nie może być puste.</p>
                         {% endif %}
                     </div>
 
@@ -90,6 +90,7 @@
 <style>
     .custom-error {
         color: red;
+        font-size: 14px;
     }
 </style>
 {% endblock %}

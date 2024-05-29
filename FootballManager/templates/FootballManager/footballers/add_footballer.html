@@ -13,7 +13,7 @@
                         <div class="control">
                             <input class="input" type="text" name="name" placeholder="Wprowadź imie gracza">
                             {% if form.name.errors %}
-                                <p class="help is-danger">{{ form.name.errors }}</p>
+                                <p class="help custom-error">Pole imie nie może być puste.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                         <div class="control">
                             <input class="input" type="text" name="surname" placeholder="Wprowadź nazwisko">
                             {% if form.surname.errors %}
-                                <p class="help is-danger">{{ form.surname.errors }}</p>
+                                <p class="help custom-error">Pole nazwisko nie może być puste.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                                 {{ form.team }}
                             </div>
                             {% if form.team.errors %}
-                                <p class="help is-danger">{{ form.team.errors }}</p>
+                                <p class="help custom-error">Zawodnik musi zostać przypisany do drużyny.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -49,4 +49,11 @@
         </div>
     </div>
 </div>
+
+<style>
+    .custom-error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}

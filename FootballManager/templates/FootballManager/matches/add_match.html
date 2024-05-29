@@ -19,7 +19,7 @@
                         <div class="control">
                             <input type="datetime-local" class="input" name="date">
                             {% if match_form.date.errors %}
-                                <p class="help is-danger">{{ match_form.date.errors }}</p>
+                                <p class="help custom-error">Data nie może byc pusta</p>
                             {% endif %}
                         </div>
                     </div>
@@ -62,4 +62,11 @@
         </div>
     </div>
 </div>
+
+<style>
+    .custom-error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}
