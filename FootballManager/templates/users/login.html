@@ -8,6 +8,13 @@
             <div class="box">
                 <form method="POST">
                     {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="notification is-danger">
+                            {% for error in form.non_field_errors %}
+                                <p>Nieprawidłowa nazwa użytkownika lub hasło.</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <div class="field">
                         <label class="label">Nazwa użytkownika</label>
                         <div class="control">
@@ -30,4 +37,10 @@
         </div>
     </div>
 </div>
+<style>
+    .custom-error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}

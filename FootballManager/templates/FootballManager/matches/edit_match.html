@@ -8,60 +8,66 @@
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="notification is-danger">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <p class="help custom-error">Drużyna gospodarzy nie może być taka sama jak drużyna gości.</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
                     <div class="columns is-multiline is-mobile">
                         <div class="column is-half">
                             <label class="label">Data meczu</label>
                             <div class="control">
-                                <input class="input" type="datetime-local" name="date" {% if match.date %}
-                                    value="{{ match.date|date:'Y-m-d\\TH:i' }}" {% else %}
+                                <input class="input" type="datetime-local" name="date" {% if form.date.value %}
+                                    value="{{ form.date.value }}" {% else %}
                                     placeholder="Wprowadź datę meczu" {% endif %}>
                             </div>
+                            {% if form.date.errors %}
+                                <p class="help error">Data nie może być pusta.</p>
+                            {% endif %}
                         </div>
                         <div class="column is-half">
                             <label class="label">Kolejka</label>
                             <div class="control">
                                 <div class="select">
-                                    <select name="queue">
-                                        {% for queue in queues %}
-                                            <option value="{{ queue.id }}" {% if match.queue.id == queue.id %}selected{% endif %}>
-                                                {{ queue.number }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
+                                    {{ form.queue }}
                                 </div>
                             </div>
+                            {% if form.queue.errors %}
+                                <p class="help custom-error">{{ form.queue.errors }}</p>
+                            {% endif %}
                         </div>
                     </div>
+
                     <div class="columns is-multiline is-mobile">
                         <div class="column is-half">
                             <label class="label">Gospodarz</label>
                             <div class="control">
                                 <div class="select">
-                                    <select name="host_team">
-                                        {% for team in teams %}
-                                        <option value="{{ team.id }}" {% if match.host_team and match.host_team.id == team.id %}selected{% endif %}>
-                                            {{ team.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
+                                    {{ form.host_team }}
                                 </div>
                             </div>
+                            {% if form.host_team.errors %}
+                                <p class="help custom-error">{{ form.host_team.errors }}</p>
+                            {% endif %}
                         </div>
-                        <div class="field">
+                        <div class="column is-half">
                             <label class="label">Goście</label>
                             <div class="control">
                                 <div class="select">
-                                    <select name="guest_team">
-                                        {% for team in teams %}
-                                        <option value="{{ team.id }}" {% if match.guest_team and match.guest_team.id == team.id %}selected{% endif %}>
-                                            {{ team.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
+                                    {{ form.guest_team }}
                                 </div>
                             </div>
+                            {% if form.guest_team.errors %}
+                                <p class="help custom-error">{{ form.guest_team.errors }}</p>
+                            {% endif %}
                         </div>
                     </div>
+
                     <div class="field">
                         <div class="control has-text-centered">
                             <button class="button is-primary" type="submit">Zapisz</button>
@@ -73,4 +79,14 @@
         </div>
     </div>
 </div>
+
+<style>
+    .custom-error {
+        font-size: 14px;
+    }
+    .error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}

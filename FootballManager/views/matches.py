@@ -50,13 +50,11 @@ def Add_Match_Result(request, match_id):
             matchresult.guest_goals = matchresult_form.cleaned_data['guest_goals']
             matchresult.save()
 
-            # Save events with rollback if they are modified
             events = formset.save(commit=False)
             for event in events:
                 event.match = match
                 event.save()
 
-            # Handle deletion of events
             for form in formset.deleted_forms:
                 form.instance.delete()
 
