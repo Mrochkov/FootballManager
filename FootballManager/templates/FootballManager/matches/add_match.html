@@ -8,14 +8,19 @@
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
-                    <span class="error-message">{{ form.non_field_errors }} </span>
+                    {% if match_form.non_field_errors %}
+                        <div class="notification is-danger">
+                            {{ match_form.non_field_errors }}
+                        </div>
+                    {% endif %}
 
                     <div class="field">
                         <label class="label">Data meczu</label>
-                        <div class="field">
-                            <div class="control">
-                                <input type="datetime-local" class="input" name="date">
-                            </div>
+                        <div class="control">
+                            <input type="datetime-local" class="input" name="date">
+                            {% if match_form.date.errors %}
+                                <p class="help is-danger">{{ match_form.date.errors }}</p>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -52,7 +57,6 @@
                             <a class="button is-light" href="{% url 'Matches' %}">Anuluj</a>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>

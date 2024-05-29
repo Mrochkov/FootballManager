@@ -8,11 +8,41 @@ class FootballerForm(ModelForm):
         model = Footballer
         fields = '__all__'
 
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if not name:
+            raise forms.ValidationError("Pole imienia nie może być puste.")
+        return name
+
+    def clean_surname(self):
+        surname = self.cleaned_data.get('surname')
+        if not surname:
+            raise forms.ValidationError("Pole nazwiska nie może być puste.")
+        return surname
+
 
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ['name', 'trainer', 'logo', 'description']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'input', 'placeholder': 'Wprowadź nazwę drużyny'}),
+            'trainer': forms.TextInput(attrs={'class': 'input', 'placeholder': 'Wprowadź imię i nazwisko trenera'}),
+            'logo': forms.ClearableFileInput(attrs={'class': 'file-input'}),
+            'description': forms.Textarea(attrs={'class': 'textarea', 'placeholder': 'Wprowadź opis drużyny'}),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if Team.objects.filter(name=name).exists():
+            raise forms.ValidationError("Drużyna o tej nazwie już istnieje.")
+        return name
+
+    def clean_trainer(self):
+        trainer = self.cleaned_data.get('trainer')
+        if not trainer:
+            raise forms.ValidationError("Pole trenera nie może być puste.")
+        return trainer
 
 
 class EventForm(ModelForm):
@@ -33,6 +63,12 @@ class MatchForm(ModelForm):
         if host_team == guest_team:
             raise forms.ValidationError("Drużyna gospodarzy nie może być taka sama jak drużyna gości.")
         return cleaned_data
+
+    def clean_date(self):
+        date = self.cleaned_data.get('date')
+        if not date:
+            raise forms.ValidationError("Data meczu jest wymagana.")
+        return date
 
 
 class MatchResultForm(ModelForm):

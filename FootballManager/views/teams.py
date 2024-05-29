@@ -50,4 +50,3 @@ def Delete_Team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     team.delete()
     return redirect('Teams')
-

@@ -14,5 +14,5 @@ class TableView(generic.ListView):
             matches_count=F('host_matches_count') + F('guest_matches_count'),
             points=F('wins') * 3 + F('draws'),
             goals_balance=F('goals_scored') - F('goals_lost')
-        ).order_by('-points')  # Sort by points in descending order
+        ).order_by('-points')
         return teams

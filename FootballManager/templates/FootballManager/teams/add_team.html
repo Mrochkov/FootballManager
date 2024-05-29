@@ -8,25 +8,38 @@
             <div class="box">
                 <form method="post" enctype="multipart/form-data" class="form">
                     {% csrf_token %}
+                    {% if TeamForm.non_field_errors %}
+                        <div class="notification is-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
                     <div class="field">
                         <label class="label">Nazwa drużyny</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" placeholder="Wprowadź nazwę drużyny">
+                            {{ form.name }}
                         </div>
+                        {% if form.name.errors %}
+                            <p class="help custom-error">{{ form.name.errors }}</p>
+                        {% endif %}
                     </div>
+
                     <div class="field">
                         <label class="label">Imię i nazwisko trenera</label>
                         <div class="control">
-                            <input class="input" type="text" name="trainer"
-                                placeholder="Wprowadź imię i nazwisko trenera">
+                            {{ form.trainer }}
                         </div>
+                        {% if form.trainer.errors %}
+                            <p class="help custom-error">{{ form.trainer.errors }}</p>
+                        {% endif %}
                     </div>
+
                     <div class="field">
                         <label class="label">Logo</label>
                         <div class="control">
                             <div id="file-js" class="file has-name">
                                 <label class="file-label">
-                                    <input class="file-input" type="file" name="logo" />
+                                    {{ form.logo }}
                                     <span class="file-cta">
                                         <span class="file-icon">
                                             <i class="fas fa-upload"></i>
@@ -37,14 +50,19 @@
                                 </label>
                             </div>
                         </div>
+                        {% if form.logo.errors %}
+                            <p class="help custom-error">{{ form.logo.errors }}</p>
+                        {% endif %}
                     </div>
 
                     <div class="field">
                         <label class="label">Opis</label>
                         <div class="control">
-                            <textarea class="textarea" name="description"
-                                placeholder="Wprowadź opis drużyny"></textarea>
+                            {{ form.description }}
                         </div>
+                        {% if form.description.errors %}
+                            <p class="help custom-error">{{ form.description.errors }}</p>
+                        {% endif %}
                     </div>
 
                     <div class="field">
@@ -59,7 +77,6 @@
     </div>
 </div>
 
-
 <script>
     const fileInput = document.querySelector("#file-js input[type=file]");
     fileInput.onchange = () => {
@@ -69,4 +86,10 @@
         }
     };
 </script>
+
+<style>
+    .custom-error {
+        color: red;
+    }
+</style>
 {% endblock %}
