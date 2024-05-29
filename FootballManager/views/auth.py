@@ -17,20 +17,20 @@ def custom_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password'],
-            )
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 messages.success(request, f"Hello <b>{user.username}</b>! You have been logged in")
                 return redirect('Table')
-
+            else:
+                messages.error(request, "Nieprawidłowa nazwa użytkownika lub hasło.")
         else:
-            for error in list(form.errors.values()):
-                messages.error(request, error)
+            messages.error(request, "Wprowadzono nieprawidłowe dane.")
 
-    form = AuthenticationForm()
+    else:
+        form = AuthenticationForm()
 
     return render(
         request=request,
