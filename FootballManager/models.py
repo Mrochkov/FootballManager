@@ -1,10 +1,11 @@
 from django.db import models, transaction
+from django.db.models import F
 
 
 class Team(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
-    trainer = models.CharField(max_length=60)
+    trainer = models.CharField(max_length=60, blank=True, null=True)
     wins = models.IntegerField(default=0)
     draws = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
@@ -31,42 +32,6 @@ class Footballer(models.Model):
 
 
 class Event(models.Model):
-    id = models.AutoField(primary_key=True)
-    minute = models.IntegerField(blank=False, default=0)
-    footballer = models.ForeignKey('Footballer', on_delete=models.CASCADE, null=True)
-    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True, related_name='events')
-
-    def update_statistics(self):
-        if self.event_type == self.EventType.GOAL:
-            Statistic.objects.filter(footballer=self.footballer).update(goals_scored=models.F('goals_scored') + 1)
-        elif self.event_type == self.EventType.ASSIST:
-            Statistic.objects.filter(footballer=self.footballer).update(assists=models.F('assists') + 1)
-        elif self.event_type == self.EventType.YELLOW_CARD:
-            Statistic.objects.filter(footballer=self.footballer).update(yellow_cards=models.F('yellow_cards') + 1)
-        elif self.event_type == self.EventType.RED_CARD:
-            Statistic.objects.filter(footballer=self.footballer).update(red_cards=models.F('red_cards') + 1)
-        elif self.event_type == self.EventType.OWN_GOAL:
-            Statistic.objects.filter(footballer=self.footballer).update(own_goals=models.F('own_goals') + 1)
-
-    def update_match_score(self):
-        if self.event_type == self.EventType.GOAL:
-            if self.match.host_team == self.footballer.team:
-                self.match.host_goals += 1
-            elif self.match.guest_team == self.footballer.team:
-                self.match.guest_goals += 1
-        elif self.event_type == self.EventType.OWN_GOAL:
-            if self.match.host_team == self.footballer.team:
-                self.match.guest_goals += 1
-            elif self.match.guest_team == self.footballer.team:
-                self.match.host_goals += 1
-        self.match.save()
-
-    def save(self, *args, **kwargs):
-        with transaction.atomic():
-            super().save(*args, **kwargs)
-            self.update_statistics()
-            self.update_match_score()
-
     class EventType(models.TextChoices):
         GOAL = 'GOAL', 'Gol'
         ASSIST = 'ASSIST', 'Asysta'
@@ -74,10 +39,55 @@ class Event(models.Model):
         RED_CARD = 'RED CARD', 'Czerwona kartka'
         OWN_GOAL = 'OWN GOAL', 'Gol samobójczy'
 
+    id = models.AutoField(primary_key=True)
+    minute = models.IntegerField(blank=False, default=0)
+    footballer = models.ForeignKey('Footballer', on_delete=models.CASCADE, null=True)
+    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True, related_name='events')
     event_type = models.CharField(max_length=20, choices=EventType.choices, default=EventType.GOAL)
+
+    def update_statistics(self, original_event=None):
+        # Rollback stats if the event was changed
+        if original_event:
+            if original_event.event_type == self.EventType.GOAL:
+                Statistic.objects.filter(footballer=original_event.footballer).update(goals_scored=F('goals_scored') - 1)
+            elif original_event.event_type == self.EventType.ASSIST:
+                Statistic.objects.filter(footballer=original_event.footballer).update(assists=F('assists') - 1)
+            elif original_event.event_type == self.EventType.YELLOW_CARD:
+                Statistic.objects.filter(footballer=original_event.footballer).update(yellow_cards=F('yellow_cards') - 1)
+            elif original_event.event_type == self.EventType.RED_CARD:
+                Statistic.objects.filter(footballer=original_event.footballer).update(red_cards=F('red_cards') - 1)
+            elif original_event.event_type == self.EventType.OWN_GOAL:
+                Statistic.objects.filter(footballer=original_event.footballer).update(own_goals=F('own_goals') - 1)
+
+        # Update stats for the new event
+        if self.event_type == self.EventType.GOAL:
+            Statistic.objects.filter(footballer=self.footballer).update(goals_scored=F('goals_scored') + 1)
+        elif self.event_type == self.EventType.ASSIST:
+            Statistic.objects.filter(footballer=self.footballer).update(assists=F('assists') + 1)
+        elif self.event_type == self.EventType.YELLOW_CARD:
+            Statistic.objects.filter(footballer=self.footballer).update(yellow_cards=F('yellow_cards') + 1)
+        elif self.event_type == self.EventType.RED_CARD:
+            Statistic.objects.filter(footballer=self.footballer).update(red_cards=F('red_cards') + 1)
+        elif self.event_type == self.EventType.OWN_GOAL:
+            Statistic.objects.filter(footballer=self.footballer).update(own_goals=F('own_goals') + 1)
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            # Check if this is an update
+            if self.pk:
+                original_event = Event.objects.get(pk=self.pk)
+                if original_event.footballer != self.footballer or original_event.event_type != self.event_type:
+                    self.update_statistics(original_event=original_event)
+            else:
+                # If it's a new event, just update the statistics
+                self.update_statistics()
+
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.event_type} {self.minute}"
+    
+    
 
 
 class Queue(models.Model):
