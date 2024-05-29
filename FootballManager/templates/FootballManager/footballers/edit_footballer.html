@@ -8,43 +8,43 @@
             <div class="box">
                 <form method="post" class="form">
                     {% csrf_token %}
-
                     <div class="field">
                         <label class="label">Imię zawodnika</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" 
-                                    {% if footballer.name is None or footballer.name == '' %}   
-                                        placeholder="Wprowadź imię zawodnika" 
-                                    {% else %} 
-                                        value="{{ footballer.name }}"
-                                    {% endif %}>
+                            <input class="input" type="text" name="name"
+                                {% if form.name.errors %}
+                                    class="custom-error"
+                                {% endif %}
+                                value="{{ footballer.name }}">
                         </div>
+                        {% if form.name.errors %}
+                            <p class="help custom-error">Pole imię nie może być puste.</p>
+                        {% endif %}
                     </div>
 
                     <div class="field">
                         <label class="label">Nazwisko zawodnika</label>
                         <div class="control">
-                            <input class="input" type="text" name="surname" 
-                                    {% if footballer.surname is None or footballer.surname == '' %}   
-                                        placeholder="Wprowadź nazwisko zawodnika" 
-                                    {% else %} 
-                                        value="{{ footballer.surname }}"
-                                    {% endif %}>
+                            <input class="input" type="text" name="surname"
+                                {% if form.surname.errors %}
+                                    class="custom-error"
+                                {% endif %}
+                                value="{{ footballer.surname }}">
                         </div>
+                        {% if form.surname.errors %}
+                            <p class="help custom-error">Pole nazwisko nie może być puste.</p>
+                        {% endif %}
                     </div>
 
                     <div class="field">
                         <label class="label">Drużyna</label>
                         <div class="control">
                             <div class="select">
-                                <select name="team">
-                                    {% for team in teams %}
-                                        <option value="{{ team.id }}" {% if footballer.team and footballer.team.id == team.id %}selected{% endif %}>
-                                            {{ team.name }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
+                                {{ form.team }}
                             </div>
+                            {% if form.team.errors %}
+                                <p class="help custom-error">Zawodnik musi zostać przypisany do drużyny.</p>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -59,4 +59,11 @@
         </div>
     </div>
 </div>
+
+<style>
+    .custom-error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
 {% endblock %}
