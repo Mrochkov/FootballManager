@@ -10,10 +10,8 @@
                     {% csrf_token %}
                     {% if form.errors %}
                         <div class="notification is-danger">
-                            {% for field in form %}
-                                {% for error in field.errors %}
-                                    <p class="help custom-error">Drużyna gospodarzy nie może być taka sama jak drużyna gości.</p>
-                                {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <p class="help custom-error">{{ error }}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
@@ -22,9 +20,8 @@
                         <div class="column is-half">
                             <label class="label">Data meczu</label>
                             <div class="control">
-                                <input class="input" type="datetime-local" name="date" {% if form.date.value %}
-                                    value="{{ form.date.value }}" {% else %}
-                                    placeholder="Wprowadź datę meczu" {% endif %}>
+                                <input class="input" type="datetime-local" name="date"
+                                    value="{% if form.instance.date %}{{ form.instance.date|date:'Y-m-d\TH:i' }}{% else %}{{ form.date.value|date:'Y-m-d\TH:i' }}{% endif %}" placeholder="Wprowadź datę meczu">
                             </div>
                             {% if form.date.errors %}
                                 <p class="help error">Data nie może być pusta.</p>
@@ -89,4 +86,5 @@
         font-size: 14px;
     }
 </style>
+
 {% endblock %}
