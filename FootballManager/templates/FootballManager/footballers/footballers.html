@@ -9,9 +9,7 @@
                 <th>Imię</th>
                 <th>Nazwisko</th>
                 <th>Drużyna</th>
-                {% if user.is_authenticated %}
                 <th>Akcje</th>
-                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -21,7 +19,6 @@
                 <td>{{ footballer.name }}</td>
                 <td>{{ footballer.surname }}</td>
                 <td>{{ footballer.team }}</td>
-                {% if user.is_authenticated %}
                 <td>
                     <a href="{% url 'Info footballer' footballer.id %}" class="button is-small is-info">
                         <span class="icon">
@@ -29,6 +26,7 @@
                         </span>
                         <span>Info</span>
                     </a>
+                    {% if user.is_authenticated %}
                     <a href="{% url 'Edit footballer' footballer.id %}" class="button is-small">
                         <span class="icon">
                             <i class="fas fa-edit"></i>
