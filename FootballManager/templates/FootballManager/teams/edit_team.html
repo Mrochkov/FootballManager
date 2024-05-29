@@ -8,27 +8,31 @@
             <div class="box">
                 <form method="post" enctype="multipart/form-data" class="form">
                     {% csrf_token %}
+
                     <div class="field">
                         <label class="label">Nazwa drużyny</label>
                         <div class="control">
-                            <input class="input" type="text" name="name" value="{{ form.name.value|default:team.name }}"
-                                placeholder="Wprowadź nazwę drużyny">
+                            <input class="input" type="text" name="name" value="{{ form.name.value|default:team.name }}" placeholder="Wprowadź nazwę drużyny">
+                            {% if form.name.errors %}
+                                <p class="help custom-error">Nazwa drużyny nie może być pusta.</p>
+                            {% endif %}
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label">Imię i nazwisko trenera</label>
                         <div class="control">
-                            <input class="input" type="text" name="trainer"
-                                value="{{ form.trainer.value|default:team.trainer }}"
-                                placeholder="Wprowadź imię i nazwisko trenera">
+                            <input class="input" type="text" name="trainer" value="{{ form.trainer.value|default:team.trainer }}" placeholder="Wprowadź imię i nazwisko trenera">
+                            {% if form.trainer.errors %}
+                                <p class="help custom-error">Pole trenera nie może być puste.</p>
+                            {% endif %}
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label">Logo</label>
                         {% if team.logo %}
-                        <img src="{{ team.logo.url }}" alt="{{ team.name }} logo" style="max-height: 200px;">
+                            <img src="{{ team.logo.url }}" alt="{{ team.name }} logo" style="max-height: 200px;">
                         {% endif %}
                         <div id="file-js" class="file has-name">
                             <label class="file-label">
@@ -42,13 +46,18 @@
                                 <span class="file-name"> Brak wybranego pliku </span>
                             </label>
                         </div>
+                        {% if form.logo.errors %}
+                            <p class="help custom-error">{{ form.logo.errors }}</p>
+                        {% endif %}
                     </div>
 
                     <div class="field">
                         <label class="label">Opis</label>
                         <div class="control">
-                            <textarea class="textarea" name="description"
-                                placeholder="Wprowadź opis drużyny">{{ form.description.value|default:team.description }}</textarea>
+                            <textarea class="textarea" name="description" placeholder="Wprowadź opis drużyny">{{ form.description.value|default:team.description }}</textarea>
+                            {% if form.description.errors %}
+                                <p class="help custom-error">{{ form.description.errors }}</p>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -73,4 +82,12 @@
         }
     };
 </script>
+
+<style>
+    .custom-error {
+        color: red;
+        font-size: 14px;
+    }
+</style>
+
 {% endblock %}

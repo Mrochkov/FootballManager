@@ -34,7 +34,8 @@ class TeamForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
-        if Team.objects.filter(name=name).exists():
+        instance = getattr(self, 'instance', None)
+        if instance and Team.objects.filter(name=name).exclude(pk=instance.pk).exists():
             raise forms.ValidationError("Drużyna o tej nazwie już istnieje.")
         return name
 
