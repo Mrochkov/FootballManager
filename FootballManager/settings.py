@@ -14,6 +14,7 @@ from pathlib import Path
 from decouple import config
 import os
 import dj_database_url
+from django.conf.global_settings import DATABASES
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -87,7 +88,7 @@ WSGI_APPLICATION = "FootballManager.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -98,6 +99,7 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+"""
 
 DATABASES["default"] = dj_database_url.parse("postgres://footballmanager_database_user:xJqBt7fzjYC1yKmbIYTjIL0PGNvUCynS@dpg-cpf4lq5ds78s73964b00-a.frankfurt-postgres.render.com/footballmanager_database")
 
