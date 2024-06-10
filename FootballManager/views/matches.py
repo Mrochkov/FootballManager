@@ -12,7 +12,7 @@ class MatchesView(generic.ListView):
 
     def get_queryset(self):
         return Match.objects.order_by("-host_team")
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['now'] = timezone.now()
@@ -31,6 +31,40 @@ def Add_Match(request):
     context = {'match_form': match_form}
     return render(request, 'FootballManager/matches/add_match.html', context)
 
+def update_team_stats_for_match_diff(host_team, guest_team, host_goal_diff, guest_goal_diff, original_host_goals, original_guest_goals, new_host_goals, new_guest_goals):
+    # Revert previous results
+    if original_host_goals > original_guest_goals:
+        host_team.wins = max(0, host_team.wins - 1)
+        guest_team.losses = max(0, guest_team.losses - 1)
+    elif original_host_goals < original_guest_goals:
+        host_team.losses = max(0, host_team.losses - 1)
+        guest_team.wins = max(0, guest_team.wins - 1)
+    else:
+        host_team.draws = max(0, host_team.draws - 1)
+        guest_team.draws = max(0, guest_team.draws - 1)
+
+    # Apply new results
+    if new_host_goals > new_guest_goals:
+        host_team.wins += 1
+        guest_team.losses += 1
+    elif new_host_goals < new_guest_goals:
+        host_team.losses += 1
+        guest_team.wins += 1
+    else:
+        host_team.draws += 1
+        guest_team.draws += 1
+
+    # Update goals scored and lost
+    host_team.goals_scored += host_goal_diff
+    host_team.goals_lost += guest_goal_diff
+    guest_team.goals_scored += guest_goal_diff
+    guest_team.goals_lost += host_goal_diff
+
+    host_team.save()
+    guest_team.save()
+
+
+
 
 def Add_Match_Result(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
@@ -40,23 +74,48 @@ def Add_Match_Result(request, match_id):
     guest_players = Footballer.objects.filter(team=match.guest_team)
     footballers = host_players.union(guest_players)
 
+    # Store the original goals for calculating the difference, handling None values
+    original_host_goals = match.host_goals if match.host_goals is not None else 0
+    original_guest_goals = match.guest_goals if match.guest_goals is not None else 0
+
     if request.method == 'POST':
         matchresult_form = MatchResultForm(request.POST, instance=match)
         formset = EventFormSet(request.POST, queryset=Event.objects.filter(match=match))
 
         if matchresult_form.is_valid() and formset.is_valid():
-            matchresult = matchresult_form.save(commit=False)
-            matchresult.host_goals = matchresult_form.cleaned_data['host_goals']
-            matchresult.guest_goals = matchresult_form.cleaned_data['guest_goals']
-            matchresult.save()
+            with transaction.atomic():
+                matchresult = matchresult_form.save(commit=False)
+                new_host_goals = matchresult_form.cleaned_data['host_goals']
+                new_guest_goals = matchresult_form.cleaned_data['guest_goals']
 
-            events = formset.save(commit=False)
-            for event in events:
-                event.match = match
-                event.save()
+                # Save the new match results
+                matchresult.host_goals = new_host_goals
+                matchresult.guest_goals = new_guest_goals
+                matchresult.save()
 
-            for form in formset.deleted_forms:
-                form.instance.delete()
+                events = formset.save(commit=False)
+                for event in events:
+                    event.match = match
+                    event.save()
+
+                for form in formset.deleted_forms:
+                    form.instance.delete()
+
+                # Calculate the difference in goals
+                host_goal_diff = new_host_goals - original_host_goals
+                guest_goal_diff = new_guest_goals - original_guest_goals
+
+                # Update team statistics with the difference
+                update_team_stats_for_match_diff(
+                    match.host_team,
+                    match.guest_team,
+                    host_goal_diff,
+                    guest_goal_diff,
+                    original_host_goals,
+                    original_guest_goals,
+                    new_host_goals,
+                    new_guest_goals
+                )
 
             return redirect('Matches')
         else:
@@ -73,6 +132,9 @@ def Add_Match_Result(request, match_id):
         'footballers': footballers,
     }
     return render(request, 'FootballManager/matches/add_match_result.html', context)
+
+
+
 
 
 
