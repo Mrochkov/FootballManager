@@ -32,7 +32,6 @@ def Add_Match(request):
     return render(request, 'FootballManager/matches/add_match.html', context)
 
 def update_team_stats_for_match_diff(host_team, guest_team, host_goal_diff, guest_goal_diff, original_host_goals, original_guest_goals, new_host_goals, new_guest_goals):
-    # Revert previous results
     if original_host_goals > original_guest_goals:
         host_team.wins = max(0, host_team.wins - 1)
         guest_team.losses = max(0, guest_team.losses - 1)
@@ -43,7 +42,6 @@ def update_team_stats_for_match_diff(host_team, guest_team, host_goal_diff, gues
         host_team.draws = max(0, host_team.draws - 1)
         guest_team.draws = max(0, guest_team.draws - 1)
 
-    # Apply new results
     if new_host_goals > new_guest_goals:
         host_team.wins += 1
         guest_team.losses += 1
@@ -54,7 +52,6 @@ def update_team_stats_for_match_diff(host_team, guest_team, host_goal_diff, gues
         host_team.draws += 1
         guest_team.draws += 1
 
-    # Update goals scored and lost
     host_team.goals_scored += host_goal_diff
     host_team.goals_lost += guest_goal_diff
     guest_team.goals_scored += guest_goal_diff
@@ -62,8 +59,6 @@ def update_team_stats_for_match_diff(host_team, guest_team, host_goal_diff, gues
 
     host_team.save()
     guest_team.save()
-
-
 
 
 def Add_Match_Result(request, match_id):
@@ -74,7 +69,6 @@ def Add_Match_Result(request, match_id):
     guest_players = Footballer.objects.filter(team=match.guest_team)
     footballers = host_players.union(guest_players)
 
-    # Store the original goals for calculating the difference, handling None values
     original_host_goals = match.host_goals if match.host_goals is not None else 0
     original_guest_goals = match.guest_goals if match.guest_goals is not None else 0
 
@@ -88,7 +82,6 @@ def Add_Match_Result(request, match_id):
                 new_host_goals = matchresult_form.cleaned_data['host_goals']
                 new_guest_goals = matchresult_form.cleaned_data['guest_goals']
 
-                # Save the new match results
                 matchresult.host_goals = new_host_goals
                 matchresult.guest_goals = new_guest_goals
                 matchresult.save()
@@ -101,11 +94,11 @@ def Add_Match_Result(request, match_id):
                 for form in formset.deleted_forms:
                     form.instance.delete()
 
-                # Calculate the difference in goals
+                # obliczanie roznicy goli
                 host_goal_diff = new_host_goals - original_host_goals
                 guest_goal_diff = new_guest_goals - original_guest_goals
 
-                # Update team statistics with the difference
+                # aktualizacja roznic
                 update_team_stats_for_match_diff(
                     match.host_team,
                     match.guest_team,
@@ -132,10 +125,6 @@ def Add_Match_Result(request, match_id):
         'footballers': footballers,
     }
     return render(request, 'FootballManager/matches/add_match_result.html', context)
-
-
-
-
 
 
 def Info_Match(request, match_id):
