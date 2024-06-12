@@ -19,7 +19,6 @@
             <h1 class="title has-text-centered">Informacje o drużynie</h1>
             <div class="box">
                 {% if team.logo %}
-                    <p>{{ team.logo.url }}</p>
                     <img src="{{ team.logo.url }}" alt="{{ team.name }} logo" class="logo">
                 {% endif %}
                 <div class="field">
