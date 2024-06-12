@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import transaction
 from django.forms import modelformset_factory
-from FootballManager.models import Match, Team, Footballer, Event, Queue
+from FootballManager.models import Match, Team, Footballer, Event, Queue, Statistic, F
 from FootballManager.forms import MatchForm, MatchResultForm, EventForm
 
 class MatchesView(generic.ListView):
@@ -149,11 +149,55 @@ def Edit_Match(request, match_id):
     context = {'form': form, 'match': match, 'teams': teams, 'queues': queues}
     return render(request, 'FootballManager/matches/edit_match.html', context)
 
+def update_team_and_player_stats_before_delete(match):
+    # Aktualizacja statystyk drużyn
+    if match.host_goals is not None and match.guest_goals is not None:
+        host_goals = match.host_goals
+        guest_goals = match.guest_goals
+
+        if host_goals > guest_goals:
+            match.host_team.wins = max(0, match.host_team.wins - 1)
+            match.guest_team.losses = max(0, match.guest_team.losses - 1)
+        elif host_goals < guest_goals:
+            match.host_team.losses = max(0, match.host_team.losses - 1)
+            match.guest_team.wins = max(0, match.guest_team.wins - 1)
+        else:
+            match.host_team.draws = max(0, match.host_team.draws - 1)
+            match.guest_team.draws = max(0, match.guest_team.draws - 1)
+
+        match.host_team.goals_scored = max(0, match.host_team.goals_scored - host_goals)
+        match.host_team.goals_lost = max(0, match.host_team.goals_lost - guest_goals)
+        match.guest_team.goals_scored = max(0, match.guest_team.goals_scored - guest_goals)
+        match.guest_team.goals_lost = max(0, match.guest_team.goals_lost - host_goals)
+
+        match.host_team.save()
+        match.guest_team.save()
+
+    # Aktualizacja statystyk zawodników
+    events = Event.objects.filter(match=match)
+    for event in events:
+        if event.event_type == 'GOAL':
+            Statistic.objects.filter(footballer=event.footballer).update(goals_scored=F('goals_scored') - 1)
+        elif event.event_type == 'ASSIST':
+            Statistic.objects.filter(footballer=event.footballer).update(assists=F('assists') - 1)
+        if event.event_type == 'YELLOW CARD':
+            Statistic.objects.filter(footballer=event.footballer).update(yellow_cards=F('yellow_cards') - 1)
+        elif event.event_type == 'RED CARD':
+            Statistic.objects.filter(footballer=event.footballer).update(red_cards=F('red_cards') - 1)
+        elif event.event_type == 'OWN GOAL':
+            Statistic.objects.filter(footballer=event.footballer).update(own_goals=F('own_goals') - 1)
+
+    events.delete()
 
 def Delete_Match(request, match_id):
     match = get_object_or_404(Match, pk=match_id)
+    
+    # Aktualizacja statystyk przed usunięciem meczu
+    update_team_and_player_stats_before_delete(match)
+    
     match.delete()
     return redirect('Matches')
+
 
 def update_team_statistics(team, goals_scored, goals_lost, is_winner, is_draw):
     if is_winner:
