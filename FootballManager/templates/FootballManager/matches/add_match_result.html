@@ -85,9 +85,10 @@
                                 <label class="label">Piłkarz</label>
                                 <div class="control">
                                     <div class="select">
-                                        <select name="form-{{ forloop.counter0 }}-footballer">
+                                        <select name="form-{{ forloop.counter0 }}-footballer" class="footballer-dropdown" data-index="{{ forloop.counter0 }}">
+                                            <option value="" data-team="">-- Wybierz Piłkarza --</option>
                                             {% for footballer in footballers %}
-                                                <option value="{{ footballer.id }}" {% if form.footballer.value == footballer.id %}selected{% endif %}>
+                                                <option value="{{ footballer.id }}" data-team="{{ footballer.team }}">
                                                     {{ footballer.name }} {{ footballer.surname }}
                                                 </option>
                                             {% endfor %}
