@@ -139,6 +139,26 @@
         const addEventButton = document.getElementById('add_event_button');
         let eventIndex = {{ formset.total_form_count }};
 
+        //filter footballers based on team
+        function filterFootballers() {
+            const selectedHostTeam = document.querySelector('[name="host_team"]').value;
+            const selectedGuestTeam = document.querySelector('[name="guest_team"]').value;
+            document.querySelectorAll('.footballer-dropdown').forEach(dropdown => {
+                const currentFootballers = dropdown.querySelectorAll('option');
+                currentFootballers.forEach(option => {
+                    if (option.getAttribute('data-team') === selectedHostTeam || option.getAttribute('data-team') === selectedGuestTeam || option.value === "") {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        document.querySelector('[name="host_team"]').addEventListener('change', filterFootballers);
+        document.querySelector('[name="guest_team"]').addEventListener('change', filterFootballers);
+        filterFootballers();
+
         addEventButton.addEventListener('click', function () {
             const eventFormHTML = `
                 <div class="field">
@@ -155,9 +175,12 @@
                         <label class="label">Piłkarz</label>
                         <div class="control">
                             <div class="select">
-                                <select name="form-${eventIndex}-footballer">
+                                <select name="form-${eventIndex}-footballer" class="footballer-dropdown" data-index="${eventIndex}">
+                                    <option value="" data-team="">-- Wybierz Piłkarza --</option>
                                     {% for footballer in footballers %}
-                                        <option value="{{ footballer.id }}">{{ footballer.name }} {{ footballer.surname }}</option>
+                                        <option value="{{ footballer.id }}" data-team="{{ footballer.team }}">
+                                            {{ footballer.name }} {{ footballer.surname }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -184,7 +207,8 @@
             eventFormElement.innerHTML = eventFormHTML;
             eventsSection.appendChild(eventFormElement);
             eventIndex++;
-            document.getElementById('id_form-TOTAL_FORMS').value = eventIndex; // Update the total forms count
+            document.getElementById('id_form-TOTAL_FORMS').value = eventIndex;
+            filterFootballers();
         });
     });
 </script>
